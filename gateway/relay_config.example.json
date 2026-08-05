@@ -1,0 +1,43 @@
+{
+  "_comment": [
+    "Copy to gateway/relay_config.json and edit. That file is gitignored:",
+    "it holds real phone numbers for the people who get paged.",
+    "",
+    "timing.owner_ack_seconds is the safety-critical value. Too short and the",
+    "owner is paged while they are simply in another room; too long and a real",
+    "emergency waits. Set it with the owner and their clinician, per person."
+  ],
+
+  "dog_id": "stuart",
+  "relay_id": "relay-1",
+
+  "min_confidence": 0.45,
+
+  "owner": {
+    "id": "owner-1",
+    "name": "Alex",
+    "address": "+353850000001"
+  },
+
+  "caregivers": [
+    {
+      "id": "care-1",
+      "name": "Sam Okafor",
+      "address": "+353850000002"
+    }
+  ],
+
+  "emergency": [
+    {
+      "id": "emerg-1",
+      "name": "Emergency Services",
+      "address": "112"
+    }
+  ],
+
+  "timing": {
+    "owner_ack_seconds": 60,
+    "caregiver_ack_seconds": 120,
+    "max_location_age_seconds": 300
+  }
+}

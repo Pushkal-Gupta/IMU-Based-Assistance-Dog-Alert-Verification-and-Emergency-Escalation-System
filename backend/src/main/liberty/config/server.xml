@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Open Liberty configuration for the caregiver backend.
+
+  ejbLite is included for the @Schedule timer that drives the escalation
+  watchdog; mpHealth and mpMetrics give the deployment something to alarm on,
+  which matters more than usual here -- a backend whose watchdog has silently
+  stopped looks exactly like a backend with nothing to escalate.
+-->
+<server description="Assistance Dog Alert Backend">
+
+  <featureManager>
+    <feature>restfulWS-3.1</feature>
+    <feature>jsonb-3.0</feature>
+    <feature>cdi-4.0</feature>
+    <feature>ejbLite-4.0</feature>
+    <feature>mpConfig-3.1</feature>
+    <feature>mpHealth-4.0</feature>
+    <feature>mpMetrics-5.1</feature>
+  </featureManager>
+
+  <httpEndpoint id="defaultHttpEndpoint"
+                host="*"
+                httpPort="${http.port}"
+                httpsPort="${https.port}"/>
+
+  <webApplication location="alert-backend.war" contextRoot="/"/>
+
+  <!-- The dashboard is served from the same origin in production; this is here
+       for development, when it may be opened from a file:// URL. -->
+  <cors domain="/api/v1"
+        allowedOrigins="*"
+        allowedMethods="GET, POST, OPTIONS"
+        allowedHeaders="Content-Type, X-API-Key"
+        maxAge="3600"/>
+
+  <!-- Defaults; override per deployment. The relay heartbeats every 15 s and
+       tolerates 3 misses, so 60 s leaves margin for ordinary jitter. -->
+  <variable name="escalation.watchdog.relay.timeout.seconds" defaultValue="60"/>
+  <variable name="escalation.watchdog.alert.max.open.seconds" defaultValue="600"/>
+
+  <logging traceSpecification="ie.dcu.canine.*=info"/>
+</server>

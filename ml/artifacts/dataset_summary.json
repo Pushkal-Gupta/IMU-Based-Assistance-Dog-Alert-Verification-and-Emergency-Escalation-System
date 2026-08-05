@@ -1,0 +1,810 @@
+{
+  "n_files": 78,
+  "n_sessions": 3,
+  "n_groups": 33,
+  "n_spin_events": 135,
+  "total_samples": 150375,
+  "median_fs_hz": 51.2,
+  "total_seconds": 2937.0,
+  "spin_seconds": 340.6,
+  "event_duration_s": {
+    "min": 0.996,
+    "max": 5.293,
+    "mean": 2.523,
+    "median": 2.461
+  },
+  "per_recording": [
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-004-1",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/004",
+      "n_samples": 3600,
+      "fs_hz": 51.2,
+      "n_spin_events": 4,
+      "spin_seconds": 9.258
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-004-2",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/004",
+      "n_samples": 2250,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.145
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-004-3",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/004",
+      "n_samples": 2500,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 5.996
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-004-4",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/004",
+      "n_samples": 1500,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 6.895
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-005-1",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/005",
+      "n_samples": 9000,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 4.824
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-005-2",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/005",
+      "n_samples": 2500,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.168
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-005-3",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/005",
+      "n_samples": 2000,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.559
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-005-4",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/005",
+      "n_samples": 2500,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.559
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-006-1",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/006",
+      "n_samples": 5000,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 7.383
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-006-2",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/006",
+      "n_samples": 2500,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.461
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-006-3",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/006",
+      "n_samples": 2500,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.777
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-006-4",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/006",
+      "n_samples": 4080,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.898
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-007-1",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/007",
+      "n_samples": 7000,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 6.387
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-007-2",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/007",
+      "n_samples": 3500,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 8.066
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-007-3",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/007",
+      "n_samples": 4000,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.535
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-008-1",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/008",
+      "n_samples": 4000,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.047
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-008-2",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/008",
+      "n_samples": 5500,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.633
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-008-3",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/008",
+      "n_samples": 6000,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.633
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-009-1",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/009",
+      "n_samples": 5000,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 7.754
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-009-2",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/009",
+      "n_samples": 4500,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.754
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-010-1",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/010",
+      "n_samples": 5500,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.754
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-010-3",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/010",
+      "n_samples": 5000,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 11.191
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-010-4",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/010",
+      "n_samples": 3500,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 9.824
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-011-1",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/011",
+      "n_samples": 4250,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 7.461
+    },
+    {
+      "source_id": "1st_A22C/Shimmer_A22C-014-3",
+      "session": "1st_A22C",
+      "device": "A22C",
+      "group": "1st_A22C/014",
+      "n_samples": 2500,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 4.727
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-000-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/000",
+      "n_samples": 700,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.535
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-001-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/001",
+      "n_samples": 601,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.637
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-001-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/001",
+      "n_samples": 751,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.387
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-002-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/002",
+      "n_samples": 551,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.191
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-002-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/002",
+      "n_samples": 701,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.289
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-002-3",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/002",
+      "n_samples": 601,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.191
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-002-4",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/002",
+      "n_samples": 1234,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 3.359
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-003-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/003",
+      "n_samples": 1151,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.312
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-003-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/003",
+      "n_samples": 1201,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 3.164
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-004-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/004",
+      "n_samples": 1401,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 2.93
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-005-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/005",
+      "n_samples": 651,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.289
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-005-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/005",
+      "n_samples": 551,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 0.996
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-006-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/006",
+      "n_samples": 381,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.973
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-007-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/007",
+      "n_samples": 1101,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 3.164
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-007-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/007",
+      "n_samples": 1101,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.117
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-007-3",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/007",
+      "n_samples": 951,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 3.262
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-008-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/008",
+      "n_samples": 1151,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 3.457
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-008-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/008",
+      "n_samples": 1001,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 3.945
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-008-3",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/008",
+      "n_samples": 1601,
+      "fs_hz": 51.2,
+      "n_spin_events": 5,
+      "spin_seconds": 11.23
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-008-4",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/008",
+      "n_samples": 1001,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.949
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-008-5",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/008",
+      "n_samples": 2501,
+      "fs_hz": 51.2,
+      "n_spin_events": 4,
+      "spin_seconds": 10.43
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-009-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/009",
+      "n_samples": 1451,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.801
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-009-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/009",
+      "n_samples": 801,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.898
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-010-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/010",
+      "n_samples": 1751,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.703
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-010-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/010",
+      "n_samples": 1001,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.73
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-010-3",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/010",
+      "n_samples": 651,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.145
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-010-4",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/010",
+      "n_samples": 1001,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 6.973
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-011-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/011",
+      "n_samples": 2351,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 8.164
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-011-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/011",
+      "n_samples": 1551,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 9.238
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-012-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/012",
+      "n_samples": 851,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.047
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-015-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/015",
+      "n_samples": 1251,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.34
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-015-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/015",
+      "n_samples": 1101,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.703
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-016-1",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/016",
+      "n_samples": 1651,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 6.211
+    },
+    {
+      "source_id": "2nd_0098/Shimmer_0098-016-2",
+      "session": "2nd_0098",
+      "device": "0098",
+      "group": "2nd_0098/016",
+      "n_samples": 501,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.07
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-001-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/001",
+      "n_samples": 851,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.508
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-003-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/003",
+      "n_samples": 1001,
+      "fs_hz": 51.2,
+      "n_spin_events": 3,
+      "spin_seconds": 7.188
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-003-2",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/003",
+      "n_samples": 1201,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 5.898
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-003-3",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/003",
+      "n_samples": 521,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.363
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-004-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/004",
+      "n_samples": 601,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.168
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-004-2",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/004",
+      "n_samples": 601,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.973
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-004-3",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/004",
+      "n_samples": 601,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.168
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-005-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/005",
+      "n_samples": 701,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 2.383
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-005-2",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/005",
+      "n_samples": 701,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 3.359
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-005-3",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/005",
+      "n_samples": 501,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.559
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-005-4",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/005",
+      "n_samples": 601,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.535
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-006-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/006",
+      "n_samples": 601,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.973
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-009-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/009",
+      "n_samples": 651,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 3.164
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-010-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/010",
+      "n_samples": 1061,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 8.047
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-010-2",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/010",
+      "n_samples": 901,
+      "fs_hz": 51.2,
+      "n_spin_events": 2,
+      "spin_seconds": 6.68
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-011-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/011",
+      "n_samples": 401,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.559
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-011-2",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/011",
+      "n_samples": 801,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 3.145
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-012-1",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/012",
+      "n_samples": 701,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 1.289
+    },
+    {
+      "source_id": "3rd_A22C/Shimmer_A22C-012-2",
+      "session": "3rd_A22C",
+      "device": "A22C",
+      "group": "3rd_A22C/012",
+      "n_samples": 401,
+      "fs_hz": 51.2,
+      "n_spin_events": 1,
+      "spin_seconds": 2.168
+    }
+  ],
+  "n_events": 342,
+  "n_event_groups": 32,
+  "event_samples": 401,
+  "event_seconds": 7.832,
+  "windows_per_event": 5,
+  "n_positive_events": 134,
+  "n_negative_events": 208,
+  "n_windows": 1710,
+  "n_positive_windows": 257,
+  "window_samples": 133,
+  "stride_samples": 67,
+  "n_features": 159
+}

@@ -1,0 +1,34 @@
+# Real contact details for the people who get paged. Never commit this.
+gateway/relay_config.json
+
+# --- generated, but committed on purpose -----------------------------------
+# docs/figures/            the report renders them
+# ml/artifacts/*.json      the documentation cites these numbers
+# firmware/collar/src/model.h  so the firmware builds without a Python toolchain
+#
+# Rebuild any of them with `make artifacts`.
+
+# Generated and NOT committed: large binaries that add nothing to a diff.
+ml/artifacts/*.joblib
+firmware/test/vectors.bin
+
+# Runtime state
+data/
+.devserver.pid
+
+# Build output
+firmware/test/test_native
+backend/target/
+*.o
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

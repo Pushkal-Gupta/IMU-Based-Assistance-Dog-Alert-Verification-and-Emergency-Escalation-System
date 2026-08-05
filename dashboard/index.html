@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assistance Dog Alert History</title>
+<style>
+  /* Palette: the first three slots of a categorical set validated for
+     colour-vision deficiency at all pairs (worst CVD deltaE 9.2, worst
+     normal-vision deltaE 24.0). Status colours are reserved and always ship
+     with a text label, never colour alone. */
+  :root {
+    color-scheme: light;
+    --surface: #fcfcfb;
+    --surface-raised: #ffffff;
+    --border: #e5e4df;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --ink-3: #8a8880;
+    --series-1: #2a78d6;
+    --good: #008300;
+    --warning: #eda100;
+    --critical: #e34948;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 4px 12px rgba(0, 0, 0, .04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --surface: #1a1a19;
+      --surface-raised: #232322;
+      --border: #383835;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --ink-3: #8a8880;
+      --series-1: #3987e5;
+      --good: #37a337;
+      --warning: #c98500;
+      --critical: #e66767;
+      --shadow: none;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1.25rem 4rem;
+    background: var(--surface);
+    color: var(--ink);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 1080px; margin: 0 auto; }
+
+  header { margin-bottom: 2rem; }
+  h1 { font-size: 1.5rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
+  .subtitle { color: var(--ink-2); margin: 0; font-size: .95rem; }
+  h2 {
+    font-size: .8rem; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--ink-3); margin: 2.5rem 0 .85rem; font-weight: 600;
+  }
+
+  /* Stat tiles: a headline number needs no chart. */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: .75rem; }
+  .tile {
+    background: var(--surface-raised); border: 1px solid var(--border);
+    border-radius: 10px; padding: .9rem 1rem; box-shadow: var(--shadow);
+  }
+  .tile .label { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); }
+  .tile .value { font-size: 1.85rem; font-weight: 650; margin-top: .2rem; letter-spacing: -.02em; }
+  .tile .note { font-size: .78rem; color: var(--ink-2); margin-top: .1rem; }
+  .tile.attention .value { color: var(--critical); }
+
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-raised); }
+  th {
+    text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--ink-3); font-weight: 600; padding: .7rem .85rem; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td { padding: .7rem .85rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr.expandable { cursor: pointer; }
+  tbody tr.expandable:hover { background: color-mix(in srgb, var(--series-1) 6%, transparent); }
+
+  /* Every state carries its own word; the dot is redundant reinforcement,
+     never the only signal. */
+  .state { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; font-weight: 550; }
+  .dot { width: .55rem; height: .55rem; border-radius: 50%; flex: none; }
+  .s-ok    .dot { background: var(--good); }
+  .s-warn  .dot { background: var(--warning); }
+  .s-crit  .dot { background: var(--critical); }
+  .s-open  .dot { background: var(--series-1); }
+  .s-ok    { color: var(--good); }
+  .s-warn  { color: var(--warning); }
+  .s-crit  { color: var(--critical); }
+  .s-open  { color: var(--series-1); }
+
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem; color: var(--ink-2); }
+  .muted { color: var(--ink-3); }
+
+  .trail { margin: .5rem 0 0; padding: .6rem .85rem; background: var(--surface); border-radius: 8px; }
+  .trail li { margin-bottom: .3rem; font-size: .83rem; color: var(--ink-2); }
+  .trail li:last-child { margin-bottom: 0; }
+  .trail .at { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink-3); margin-right: .5rem; }
+
+  .empty { padding: 2.5rem 1rem; text-align: center; color: var(--ink-3); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  button {
+    font: inherit; font-size: .85rem; padding: .4rem .8rem; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--surface-raised); color: var(--ink); cursor: pointer;
+  }
+  button:hover { border-color: var(--series-1); }
+  .status-line { font-size: .82rem; color: var(--ink-3); }
+  .status-line.error { color: var(--critical); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Assistance Dog Alert History</h1>
+    <p class="subtitle">
+      Every trained alert the collar raised, who it reached, and how long it took.
+    </p>
+  </header>
+
+  <div class="bar">
+    <h2 style="margin:0">Overview</h2>
+    <div class="bar" style="gap:.6rem">
+      <span class="status-line" id="status">loading…</span>
+      <button id="refresh" type="button">Refresh</button>
+    </div>
+  </div>
+
+  <section class="tiles" id="tiles"></section>
+
+  <h2>Alerts</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Raised</th>
+          <th>Dog</th>
+          <th>Outcome</th>
+          <th>Confidence</th>
+          <th>Owner response</th>
+          <th>Reached</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p class="muted" style="font-size:.82rem;margin-top:.6rem">
+    Select a row to see its full audit trail. Contact numbers are redacted in this view.
+  </p>
+</main>
+
+<script>
+"use strict";
+
+/* Terminal states and how each should read. The label is the signal; the
+   colour only reinforces it. */
+const STATES = {
+  ACKNOWLEDGED_BY_OWNER:     { label: "Owner responded",       cls: "s-ok"   },
+  ACKNOWLEDGED_BY_CAREGIVER: { label: "Caregiver responded",   cls: "s-warn" },
+  ESCALATED_EMERGENCY:       { label: "Emergency contacted",   cls: "s-crit" },
+  DISMISSED_FALSE_POSITIVE:  { label: "Dismissed by owner",    cls: "s-ok"   },
+  CANCELLED:                 { label: "Cancelled",             cls: "s-ok"   },
+  PENDING_OWNER:             { label: "Awaiting owner",        cls: "s-open" },
+  PENDING_CAREGIVER:         { label: "Awaiting caregiver",    cls: "s-open" }
+};
+
+const CHANNELS = { OWNER: "Owner", CAREGIVER: "Caregiver", EMERGENCY: "Emergency" };
+
+function seconds(value) {
+  if (value === null || value === undefined) return "—";
+  return value < 90 ? `${value.toFixed(1)} s` : `${(value / 60).toFixed(1)} min`;
+}
+
+/* The relay clocks alerts on a monotonic timer, which has no epoch. Show the
+   raw value rather than inventing a wall-clock time that would be wrong. */
+function stamp(value) {
+  if (value === null || value === undefined) return "—";
+  return `t+${value.toFixed(1)} s`;
+}
+
+function tile(label, value, note, attention) {
+  const el = document.createElement("div");
+  el.className = "tile" + (attention ? " attention" : "");
+  el.innerHTML =
+    `<div class="label"></div><div class="value"></div><div class="note"></div>`;
+  el.querySelector(".label").textContent = label;
+  el.querySelector(".value").textContent = value;
+  el.querySelector(".note").textContent = note || "";
+  return el;
+}
+
+function renderSummary(summary) {
+  const tiles = document.getElementById("tiles");
+  tiles.replaceChildren();
+
+  const total = summary.total_alerts || 0;
+  const pct = (n) => (total ? `${Math.round((n / total) * 100)}% of alerts` : "no alerts yet");
+
+  tiles.append(
+    tile("Alerts", String(total), `${summary.open_alerts || 0} still open`),
+    tile("Escalated", String(summary.escalated || 0), pct(summary.escalated || 0),
+         (summary.escalated || 0) > 0),
+    tile("Dismissed", String(summary.dismissed_false_positive || 0),
+         pct(summary.dismissed_false_positive || 0)),
+    tile("Mean owner response",
+         summary.owner_response && summary.owner_response.mean_seconds !== null
+           ? seconds(summary.owner_response.mean_seconds) : "—",
+         summary.owner_response ? `${summary.owner_response.n} responded` : ""),
+    tile("Below threshold", String(summary.suppressed_detections || 0),
+         "logged, nobody paged")
+  );
+}
+
+function reachedCell(notifications) {
+  const delivered = new Set(
+    (notifications || []).filter((n) => n.status === "DELIVERED").map((n) => n.channel)
+  );
+  const failed = (notifications || []).filter((n) => n.status === "FAILED");
+  const names = ["OWNER", "CAREGIVER", "EMERGENCY"]
+    .filter((c) => delivered.has(c))
+    .map((c) => CHANNELS[c]);
+
+  let text = names.length ? names.join(" → ") : "nobody";
+  if (failed.length) text += ` (${failed.length} failed)`;
+  return text;
+}
+
+function trailRow(alert, columns) {
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  td.colSpan = columns;
+
+  const list = document.createElement("ol");
+  list.className = "trail";
+  const base = alert.raised_at_seconds || 0;
+
+  for (const t of alert.transitions || []) {
+    const li = document.createElement("li");
+    const at = document.createElement("span");
+    at.className = "at";
+    at.textContent = `+${(t.at_seconds - base).toFixed(1)}s`;
+    li.append(at, document.createTextNode(`${t.to_state} — ${t.reason}`));
+    list.append(li);
+  }
+  for (const n of alert.notifications || []) {
+    const li = document.createElement("li");
+    const at = document.createElement("span");
+    at.className = "at";
+    at.textContent = `+${(n.at_seconds - base).toFixed(1)}s`;
+    li.append(at, document.createTextNode(
+      `notified ${CHANNELS[n.channel] || n.channel} — ${n.status.toLowerCase()}` +
+      (n.detail ? ` (${n.detail})` : "")
+    ));
+    list.append(li);
+  }
+  if (alert.location) {
+    const li = document.createElement("li");
+    li.textContent =
+      `location sent: ${alert.location.latitude.toFixed(5)}, ` +
+      `${alert.location.longitude.toFixed(5)} ` +
+      `(±${Math.round(alert.location.accuracy_m)} m, ` +
+      `${Math.round(alert.location.age_seconds)} s old)`;
+    list.append(li);
+  }
+
+  td.append(list);
+  tr.append(td);
+  tr.hidden = true;
+  return tr;
+}
+
+/* Rows the reader has opened. Survives a re-render: a poll that silently
+   collapsed the trail someone was mid-way through reading would be worse than
+   not polling at all. */
+const expanded = new Set();
+
+function renderAlerts(alerts) {
+  const body = document.getElementById("rows");
+  body.replaceChildren();
+
+  if (!alerts.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 6;
+    td.className = "empty";
+    td.textContent = "No alerts recorded yet.";
+    tr.append(td);
+    body.append(tr);
+    return;
+  }
+
+  for (const alert of alerts) {
+    const meta = STATES[alert.state] || { label: alert.state, cls: "s-open" };
+    const tr = document.createElement("tr");
+    tr.className = "expandable";
+
+    const cells = [
+      ["mono", stamp(alert.raised_at_seconds)],
+      ["", alert.dog_id || "—"],
+      ["state-cell", null],
+      ["", alert.confidence != null ? `${Math.round(alert.confidence * 100)}%` : "—"],
+      ["", seconds(alert.owner_response_seconds)],
+      ["muted", reachedCell(alert.notifications)]
+    ];
+
+    for (const [cls, text] of cells) {
+      const td = document.createElement("td");
+      if (cls === "state-cell") {
+        const span = document.createElement("span");
+        span.className = `state ${meta.cls}`;
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        span.append(dot, document.createTextNode(meta.label));
+        td.append(span);
+      } else {
+        if (cls) td.className = cls;
+        td.textContent = text;
+      }
+      tr.append(td);
+    }
+
+    const detail = trailRow(alert, 6);
+    detail.hidden = !expanded.has(alert.alert_id);
+    tr.setAttribute("aria-expanded", String(!detail.hidden));
+    tr.addEventListener("click", () => {
+      detail.hidden = !detail.hidden;
+      tr.setAttribute("aria-expanded", String(!detail.hidden));
+      if (detail.hidden) expanded.delete(alert.alert_id);
+      else expanded.add(alert.alert_id);
+    });
+    body.append(tr, detail);
+  }
+}
+
+/* Fingerprint of the last render, so an unchanged poll is a no-op rather than a
+   full teardown of the DOM the reader is looking at. */
+let lastFingerprint = null;
+
+async function refresh() {
+  const status = document.getElementById("status");
+  try {
+    const [summary, alerts] = await Promise.all([
+      fetch("/api/v1/summary").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      fetch("/api/v1/alerts").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    ]);
+
+    const fingerprint = JSON.stringify([summary, alerts]);
+    if (fingerprint !== lastFingerprint) {
+      lastFingerprint = fingerprint;
+      renderSummary(summary);
+      renderAlerts(alerts.alerts || []);
+    }
+    status.className = "status-line";
+    status.textContent = `updated ${new Date().toLocaleTimeString()}`;
+  } catch (error) {
+    status.className = "status-line error";
+    status.textContent = `cannot reach the backend (${error.message})`;
+  }
+}
+
+document.getElementById("refresh").addEventListener("click", refresh);
+refresh();
+/* The dashboard is a record, not a monitor -- the alerting path is the phone.
+   A slow poll is enough and keeps a parked browser tab from hammering the API. */
+setInterval(refresh, 15000);
+</script>
+</body>
+</html>
