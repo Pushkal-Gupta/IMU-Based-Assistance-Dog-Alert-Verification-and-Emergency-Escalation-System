@@ -7,7 +7,7 @@
   "verify_n": 4,
   "vote_threshold": 0.45,
   "refractory_seconds": 60.0,
-  "max_transpile_error": 8.104887982973707e-09,
+  "max_transpile_error": 8.10488809399601e-09,
   "n_trees": 32,
   "n_nodes": 2862,
   "flash_bytes": 40132,

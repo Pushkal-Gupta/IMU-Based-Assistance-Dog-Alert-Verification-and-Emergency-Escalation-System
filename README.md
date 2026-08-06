@@ -119,15 +119,16 @@ the case where the phone itself dies. Full rationale in
 | Document | Covers |
 |---|---|
 | [00-index.md](docs/00-index.md) | Reading order and document map |
-| [01-project-report.md](docs/01-project-report.md) | The full academic report |
+| [01-project-report.md](docs/01-project-report.md) | The full technical report |
 | [02-architecture.md](docs/02-architecture.md) | System design and the decisions behind it |
 | [03-detection-pipeline.md](docs/03-detection-pipeline.md) | Signal processing and machine learning |
 | [04-escalation-protocol.md](docs/04-escalation-protocol.md) | The state machine, formally |
 | [05-hardware.md](docs/05-hardware.md) | Bill of materials, wiring, power budget |
 | [06-api.md](docs/06-api.md) | REST contract |
 | [07-evaluation.md](docs/07-evaluation.md) | Results, with the caveats stated plainly |
-| [08-literature.md](docs/08-literature.md) | Prior art and the novelty claim |
+| [08-literature.md](docs/08-literature.md) | Related work across five research areas, with an annotated bibliography |
 | [09-limitations.md](docs/09-limitations.md) | What this is not, and what would have to change |
+| [10-developer-guide.md](docs/10-developer-guide.md) | **Full developer guide** — setup, recipes, extension points, debugging |
 
 ## Verification status
 
@@ -142,14 +143,113 @@ the case where the phone itself dies. Full rationale in
 
 Run everything with `make test`.
 
-## Course-module mapping
+## Developer guide
 
-| Module | Where it appears |
-|---|---|
-| M2 — BLE and building blocks | Collar → phone GATT service (`firmware/collar/collar.ino`) |
-| M3 — BSN architecture | Two-node body sensor network (`docs/02-architecture.md`) |
-| M5 — Cloud-assisted BSN | Backend, watchdog, dashboard (`backend/`, `dashboard/`) |
-| M6 — SPINE-style activity recognition | Windowing, features, classification (`ml/canine_alert/`) |
+A condensed version follows. The full guide — recipes, extension points,
+debugging, performance characteristics, using `escalation` as a standalone
+library — is [docs/10-developer-guide.md](docs/10-developer-guide.md).
+
+### Setting up
+
+```bash
+pip install -r requirements.txt
+make artifacts      # ~30 s: train, export the model, build vectors and figures
+make test           # 90 ML + 63 escalation tests, 240 firmware checks
+```
+
+Only the ML layer needs third-party packages. `escalation/`, `gateway/` and
+`tools/` are standard-library only — deliberately, so the safety path carries no
+dependency and the relay can run on a handset with nothing installed.
+
+The dataset is not vendored. Download
+[figshare 30022441](https://doi.org/10.6084/m9.figshare.30022441) and unpack it
+to `spinning_dataset/`.
+
+### Where to make a change
+
+| You want to… | Edit | Then run |
+|---|---|---|
+| Change a window size, threshold or timer | `ml/canine_alert/config.py` | `make artifacts` |
+| Add or change a feature | `features.py` **and** `firmware/collar/src/ca_features.c` | `make test` |
+| Try a different classifier | `models.py` → `build_model()` | `make experiments` |
+| Change escalation timings | `gateway/relay_config.json` | `python gateway/replay.py` |
+| Add a notification channel (SMS, push) | implement `Notifier.send()` in `notify.py` | `make test-escalation` |
+| Change the REST contract | `tools/devserver.py` **and** `backend/.../AlertResource.java` **and** `docs/06-api.md` | `make demo` |
+| Change collar pins or sensor config | `firmware/collar/collar.ino` | — (needs hardware) |
+
+### The generated-file chain
+
+Four files are generated and must be regenerated together. `make artifacts` does
+it in the right order; doing it by hand in the wrong order produces a firmware
+image that disagrees with the evaluation.
+
+```
+run_experiments.py ──▶ ml/artifacts/results.json      (metrics + operating point)
+                            │
+export_firmware_model.py ◀──┘                          reads the operating point
+        └──────────────▶ firmware/collar/src/model.h  (forest tables + gate policy)
+
+make_firmware_vectors.py ─▶ firmware/test/vectors.bin (golden I/O from real data)
+make_figures.py ──────────▶ docs/figures/*.png
+```
+
+Never hand-edit `model.h`. The exporter refuses to write it if the transpiled
+forest disagrees with scikit-learn by more than 1e-6.
+
+### Invariants that will bite you
+
+These are enforced by tests. If you break one, something fails loudly — which is
+the point, because each was chosen because breaking it silently would be worse.
+
+- **`features.py` and `ca_features.c` must compute the same thing.** The model's
+  thresholds were learned on the Python features. `make test-firmware` checks all
+  159 against NumPy on real windows. Use two-pass moment calculations in the C —
+  the one-pass form loses too much in float32 on a gyro channel.
+- **Feature selection is fitted inside each CV fold**, never on the full dataset.
+  Fitting it globally leaks test labels into feature *choice*.
+- **Escalation timers run on an injected monotonic clock.** Never call
+  `time.time()` in `escalation/`. A wall clock that jumps mid-alert makes an
+  escalation fire early or never.
+- **Alert ids are derived from the episode**, not from arrival time. That is what
+  makes a BLE retransmission idempotent instead of a second page.
+- **`escalation/` performs no I/O.** Clock and notifier are constructor
+  arguments. This is what makes a three-minute ladder testable in microseconds.
+
+### The dev loop
+
+```bash
+python gateway/replay.py --scenario asleep     # end-to-end on real data
+make demo                                      # dashboard + seeded history
+python -m pytest escalation/tests -q -k ack    # focused test run
+make -C firmware/test run                      # C/Python parity
+```
+
+`replay.py` is the fastest way to see a change's effect on the whole system: it
+streams a real recording through windows, classifier, gate and escalation ladder
+on a simulated clock, and prints the timeline. Scenarios: `responsive`, `asleep`,
+`delayed`, `false-alarm`.
+
+### Two backends
+
+`backend/` (Jakarta EE) is production; `tools/devserver.py` (stdlib) is for
+development, CI and demos. They implement the **same** contract in
+[docs/06-api.md](docs/06-api.md) — a behavioural difference between them is a bug
+in one of them, so change both or neither.
+
+The Java side needs Maven and is not built by `make`:
+
+```bash
+mvn -f backend/pom.xml package
+mvn -f backend/pom.xml liberty:dev
+```
+
+### Code conventions
+
+Comments explain *why*, not *what* — particularly at the places where the obvious
+implementation is wrong (float32 moments, the DFT instead of an FFT, the
+unsigned `millis()` arithmetic). Tests are named after the failure they prevent,
+so a failing test name is a bug report. Anything that would appear in the report
+is generated into `ml/artifacts/` and cited from there, never typed by hand.
 
 ## Ethics and scope
 
@@ -157,10 +257,11 @@ No animals were involved in this project. All data comes from the published
 figshare release, collected under Dublin City University REC approval
 (DCUREC/2025/065) and Beaumont Hospital REC 25/16.
 
-**This is a student proof-of-concept, not a medical device.** It has not been
-clinically validated, has a measured false-alarm rate too high for unsupervised
-use, and must not be relied upon for medical decisions. See
-[docs/09-limitations.md](docs/09-limitations.md).
+**This is a research prototype, not a medical device.** It carries no regulatory
+approval, has not been clinically validated, has never run on hardware, and has a
+measured false-alarm rate roughly two orders of magnitude worse than
+clinically-validated human-worn seizure wearables. It must not be relied upon for
+medical decisions. See [docs/09-limitations.md](docs/09-limitations.md).
 
 ## Citation
 

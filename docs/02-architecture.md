@@ -181,7 +181,7 @@ that both are exercised by the same dashboard.
 | Stack | Jakarta EE 10 + MicroProfile, Open Liberty | Python standard library |
 | Storage | In-memory (see [09-limitations.md](09-limitations.md)) | Append-only JSONL |
 | Needs | Maven, a container | Python |
-| Role | Production, and the course's stack | Demos, CI, integration tests |
+| Role | Production | Demos, CI, integration tests |
 
 They implement the **same REST contract**. Anything one does that the other does
 not is a bug in one of them. The dev server exists so the relay, dashboard and
@@ -190,11 +190,34 @@ Java backend was not buildable in this environment.
 
 ---
 
-## 9. Module mapping
+## 9. Extension points
 
-| Course module | Component |
-|---|---|
-| M2 — BLE, building blocks | `firmware/collar/collar.ino` GATT service; `gateway/relay.py` BLE central |
-| M3 — BSN architecture | This document; collar + phone as a two-node body sensor network |
-| M5 — Cloud-assisted BSN | `backend/`, `dashboard/`, the relay watchdog |
-| M6 — SPINE-style activity recognition | `ml/canine_alert/` — windowing, features, classification, multi-stage validation |
+Where to plug something in, and what the boundary guarantees.
+
+| To add | Implement | Boundary contract |
+|---|---|---|
+| A notification transport (SMS, push, pager) | `Notifier.send(contact, alert, message) -> bool` in `escalation/notify.py` | Return `False` for delivery failure; do not raise. Wrap with `RetryingNotifier` for retries or `FanOutNotifier` for redundant paths — retry policy is written once, not per transport |
+| A different detection source | Anything that produces a `DetectionEvent` and calls `engine.submit()` | The engine never inspects how a detection was made. `alert_id()` must stay stable across retransmissions of the same episode |
+| A durable alert store | Replace `AlertRepository` (Java) or the `on_transition` hook (Python) | The hook must not raise — the engine catches, but a slow store delays a page. Append-only, never rewrite |
+| Another sensing node | A second collar with its own `dog_id` | One engine per owner; alerts are keyed by dog |
+| A different classifier | `build_model()` in `ml/canine_alert/models.py` | Must expose `predict_proba`. Only tree ensembles can be transpiled by `export.py` |
+| A different verification policy | `VerificationGate` parameters, or a new gate | Must emit a single discrete moment. The escalation layer starts a timer on it and cannot consume a continuous score |
+
+### 9.1 What the boundaries buy
+
+The layering is not decorative. Three specific properties fall out of it:
+
+- **`escalation/` has no I/O**, so the full ladder — including a three-minute
+  escalation — is exercised in microseconds by advancing a fake clock. Timing
+  logic that can only be tested by waiting does not get tested.
+- **The firmware's algorithmic core has no Arduino dependency**, so it compiles
+  on a host and can be checked numerically against the Python it must match.
+  Without this the C/Python agreement would be an assumption rather than a
+  measurement.
+- **The relay owns the ladder and the backend only records it**, so there is
+  exactly one authority over each alert's state. Adding a "resolve this alert"
+  endpoint to the backend would create a race whose losing writer is a page that
+  does or does not go out.
+
+Breaking any of these three is the kind of change that looks harmless in review
+and fails in the field, so each is guarded by a test rather than a convention.

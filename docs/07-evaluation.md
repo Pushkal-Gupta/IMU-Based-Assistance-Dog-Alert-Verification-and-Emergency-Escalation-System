@@ -182,8 +182,30 @@ but that behaviour is not in this dataset and we have not measured it.
 ## 5. The false-alarm rate, stated plainly
 
 **19.9 false alarms per hour is high.** At face value the collar would fire
-roughly every three minutes. Three things bear on how to read it, and none of
-them makes it acceptable for unsupervised use:
+roughly every three minutes.
+
+### 5.1 The external benchmark
+
+| System class | Sensitivity | False alarms | Source |
+|---|---|---|---|
+| Non-EEG human-worn seizure wearables | 79.4–96% | **0.20–1.92 / 24 h** | [08-literature.md R11](08-literature.md#r11) |
+| Accelerometry, tonic-clonic seizures (meta-analysis) | 93% | **2.5 / 24 h** | [R10](08-literature.md#r10) |
+| **This system, shipped operating point** | **76.9%** | **19.9 / hour** | this work |
+
+Roughly **two orders of magnitude worse** than the clinical state of the art. The
+comparison is not like-for-like — those devices detect a different phenomenon on a
+different subject and are evaluated on continuous ambulatory or inpatient
+recordings, while our negatives are a deliberately adversarial subset — but the
+gap is far too large for the mismatch to account for it.
+
+The clinical field also has ILAE/IFCN practice guidelines and QUADAS-2-derived
+validation standards for this device class. No equivalent exists for
+animal-mediated alerting, and any serious deployment would need one.
+
+### 5.2 How to read our number
+
+Three things bear on it, and none of them makes it acceptable for unsupervised
+use:
 
 1. **The negatives are the hardest possible negatives.** They are the spin-free
    portions of *training-session* recordings: a dog being actively cued, in a

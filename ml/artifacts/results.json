@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-05T03:52:32Z",
+  "generated_at_utc": "2026-08-05T14:40:44Z",
   "config": {
     "nominal_fs_hz": 51.2,
     "window_seconds": 2.6,
@@ -5617,7 +5617,7 @@
     }
   },
   "best_model_by_logo_f1": "svm",
-  "runtime_seconds": 20.0,
+  "runtime_seconds": 21.6,
   "deployed_model": {
     "name": "random_forest",
     "selected_features": [

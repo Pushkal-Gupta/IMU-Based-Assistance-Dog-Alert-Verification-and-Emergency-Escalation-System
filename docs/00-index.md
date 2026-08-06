@@ -3,17 +3,23 @@
 ## Reading order
 
 **If you have five minutes** — the [root README](../README.md), then
-[§7 Results](07-evaluation.md#3-results-at-a-glance).
+[§3 Results](07-evaluation.md#3-results-at-a-glance).
 
-**If you are assessing the project** — read in this order:
+**If you want to run or modify the code** — start at
+[10-developer-guide.md](10-developer-guide.md) and go nowhere else until
+something in it sends you elsewhere.
+
+**If you are reviewing the work** — read in this order:
 
 1. [01-project-report.md](01-project-report.md) — the full report: problem,
    related work, method, results, discussion, conclusion.
 2. [09-limitations.md](09-limitations.md) — read this *before* the results, not
    after. It says what the numbers do not support.
 3. [07-evaluation.md](07-evaluation.md) — every measurement, with its protocol.
+4. [08-literature.md](08-literature.md) — related work and the precise scope of
+   the novelty claim.
 
-**If you are building on it** —
+**If you are building on the design** —
 [02-architecture.md](02-architecture.md) →
 [03-detection-pipeline.md](03-detection-pipeline.md) →
 [04-escalation-protocol.md](04-escalation-protocol.md) →
@@ -23,15 +29,16 @@
 
 | # | Document | Answers |
 |---|---|---|
-| 01 | [Project report](01-project-report.md) | What was built and why, end to end |
-| 02 | [Architecture](02-architecture.md) | Why the escalation runs on the phone; how the three nodes divide the work |
+| 01 | [Technical report](01-project-report.md) | What was built and why, end to end |
+| 02 | [Architecture](02-architecture.md) | Why the escalation runs on the phone; how the three nodes divide the work; extension points |
 | 03 | [Detection pipeline](03-detection-pipeline.md) | Windowing, the 159 features, selection, the four models, the verification gate |
 | 04 | [Escalation protocol](04-escalation-protocol.md) | The state machine, its timers, and every failure mode it handles |
 | 05 | [Hardware](05-hardware.md) | Components, wiring, pin map, power budget, cost |
 | 06 | [REST API](06-api.md) | The contract between relay, backend and dashboard |
-| 07 | [Evaluation](07-evaluation.md) | Protocols, results, and where they deviate from the source paper |
-| 08 | [Literature](08-literature.md) | Prior art and the precise novelty claim |
+| 07 | [Evaluation](07-evaluation.md) | Protocols, results, the external benchmark, and where we deviate from the source study |
+| 08 | [Related work](08-literature.md) | Five research areas, an annotated bibliography, and the precise novelty claim |
 | 09 | [Limitations](09-limitations.md) | What is not validated, and what would have to change |
+| 10 | [Developer guide](10-developer-guide.md) | Setup, repository tour, recipes, extension points, testing, debugging, performance |
 
 ## Where the numbers come from
 
