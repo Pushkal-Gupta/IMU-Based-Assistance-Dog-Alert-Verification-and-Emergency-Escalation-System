@@ -39,6 +39,7 @@ firmware/test/bench_direct
 formal/tla2tools.jar
 formal/logs/
 formal/states/
+formal/*_TTrace_*
 .hypothesis/
 paper/build/
 paper/*.aux

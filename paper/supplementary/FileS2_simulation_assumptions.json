@@ -1,0 +1,45 @@
+{
+  "assumptions": {
+    "owner_awake": {
+      "p_responds": 0.95,
+      "median_s": 15.0,
+      "sigma": 0.8
+    },
+    "owner_asleep": {
+      "p_responds": 0.6,
+      "median_s": 40.0,
+      "sigma": 0.8
+    },
+    "caregiver": {
+      "p_responds": 0.8,
+      "median_s": 45.0,
+      "sigma": 0.8
+    },
+    "emergency": {
+      "p_responds": 0.99,
+      "median_s": 30.0,
+      "sigma": 0.5
+    },
+    "p_page_lost": 0.02,
+    "t1_s": 60.0,
+    "t2_s": 120.0,
+    "heartbeat_s": 15.0,
+    "watchdog_timeout_s": 60.0,
+    "hours_awake": 16.0,
+    "hours_asleep": 8.0
+  },
+  "detector": {
+    "model": "random_forest_embedded",
+    "p_detect": 0.6410256410256411,
+    "false_alarms_per_hour": 28.614216239768208,
+    "false_alarms_per_hour_strict": 60.40778983951066,
+    "source": "ml/artifacts/research.json: continuous.<deployed>.nested_refractory_60s"
+  },
+  "requirement": {
+    "caregiver_pages_per_week_target": 1.0,
+    "max_far_per_hour_for_target": 0.02341474728361678,
+    "emergency_pages_per_month_target": 1.0,
+    "max_far_per_hour_for_emergency_target": 0.018072164644767942,
+    "required_reduction_factor": 1222.0595803649558
+  }
+}

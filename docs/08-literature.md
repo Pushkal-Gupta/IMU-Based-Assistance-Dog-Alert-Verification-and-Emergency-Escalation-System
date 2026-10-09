@@ -183,7 +183,7 @@ alternative being better validated.
 
 **The false-alarm figures above are the honest yardstick for our own.**
 Clinically-validated wearables achieve roughly **2.5 false alarms per day**. Our
-shipped operating point produces **19.9 per hour** on spin-free training-session
+shipped operating point produces **22.1 per hour** on spin-free training-session
 motion ([07-evaluation.md §5](07-evaluation.md#5-the-false-alarm-rate-stated-plainly))
 — roughly two orders of magnitude worse.
 

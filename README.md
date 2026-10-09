@@ -31,22 +31,37 @@ this project.
 
 ## Headline results
 
-All figures are produced by `ml/scripts/run_experiments.py` and land in
-`ml/artifacts/results.json`. Nothing in the docs is typed by hand.
+All numbers come from `make all-research` and are cited from
+`ml/artifacts/*.json`, `escalation/artifacts/simulation.json` and
+`formal/results.json`. The research write-up is the manuscript in
+[`paper/`](paper/) (MDPI *Sensors* format); see
+[docs/11-research.md](docs/11-research.md).
 
-| | Random Forest | Heuristic baseline |
+| | Deployed forest (32 trees) | Heuristic baseline |
 |---|---|---|
-| Segment F1, pooled random split | 0.70 | 0.61 |
-| Segment F1, leave-one-group-out | **0.66** | 0.58 |
-| Event F1, leave-one-group-out | **0.87** | 0.83 |
-| Event recall (alerts caught) | **0.88** | 0.88 |
+| Segment F1, leave-one-group-out | **0.649** [[0.562, 0.728]] | 0.582 |
+| Event recall, leave-one-group-out | **0.896** [[0.760, 0.987]] | 0.881 |
+| Gate, nested selection: event sensitivity | **0.731** | 0.619 |
+| Continuous recordings, no refractory: false alarms/h | **60.4** | 92.2 |
+| Continuous recordings, 60 s refractory: episodes detected / FA/h | 0.641 / 28.6 | 0.641 / 23.8 |
 
-Shipped operating point (2-of-4 windows at p ≥ 0.45): **77% of alert episodes
-detected, 3.2 s median latency from the dog starting to spin, and 19.9 false
-alarms per hour of spin-free training-session motion.** That last number is high
-and is discussed honestly in [docs/07-evaluation.md](docs/07-evaluation.md) —
-it is the main reason the architecture requires an owner acknowledgement before
-anyone else is contacted.
+Bracketed values are 95% cluster-bootstrap intervals over recording groups.
+
+- **The curated-clip protocol understates false alarms.** Scored on continuous
+  recordings, the detector raises 2.7× the false alarms the
+  curated protocol implies (22.1/h).
+- **Escalation is formally verified.** 26 TLA⁺/TLC checks
+  confirm the ladder's safety. They also exposed a watchdog flaw that bypasses
+  the caregiver when the phone fails, and an integration bug that disabled the
+  watchdog; the bug is now fixed.
+- **Detection is the bottleneck.** In simulation, escalation reaches a human
+  within 5 minutes for 99.2% of
+  *detected* alerts when the owner cannot respond. Keeping caregiver pages to
+  one a week needs at most **0.023 false alarms/h**, which is
+  1,222× below the measured training-session rate.
+
+That last gap is why the architecture requires an owner acknowledgement before
+anyone else is contacted, and it is the main finding of the research.
 
 ![Verification gate trade-off](docs/figures/fig5_operating_curve.png)
 
@@ -89,7 +104,7 @@ open http://localhost:8080/
    │ 133-sample windows │        │ caregiver window T2  │       │ relay watchdog     │
    │ 20 features        │        │ SMS / push           │       │ caregiver dashboard│
    │ 32-tree forest     │        │ GPS fix              │       │                    │
-   │ 2-of-4 gate        │        │                      │       │                    │
+   │ K-of-N gate        │        │                      │       │                    │
    └────────────────────┘        └──────────────────────┘       └────────────────────┘
         detection                  escalation ladder                 the record
 ```
@@ -112,6 +127,9 @@ the case where the phone itself dies. Full rationale in
 | `tools/` | Dev server (stand-in for the Java backend) and demo seeder |
 | `dashboard/` | Caregiver-facing alert history |
 | `docs/` | Full documentation set — start with `00-index.md` |
+| `paper/` | The research manuscript (MDPI *Sensors*), generated numbers, figures, supplementary files |
+| `formal/` | TLA⁺ specification of the escalation protocol and the TLC runner |
+| `escalation/sim/` | Monte-Carlo simulation of whole alert episodes on the real engine |
 | `spinning_dataset/` | The figshare dataset (78 `.pkl` files) |
 
 ## Documentation
@@ -134,8 +152,10 @@ the case where the phone itself dies. Full rationale in
 
 | Component | Status |
 |---|---|
-| `ml/` (90 tests) | Passing |
-| `escalation/` (63 tests) | Passing |
+| `ml/` (114 tests) | Passing |
+| `escalation/` (71 tests, incl. 10k-example property tests) | Passing |
+| `gateway/` (relay regression test) | Passing |
+| `formal/` (26 TLC checks) | All as expected |
 | `firmware/` core (240 checks) | Passing — C verified against Python on 64 real windows |
 | Replay, 4 scenarios | Passing on real recordings |
 | Dev server + dashboard | Verified in-browser |
@@ -154,7 +174,7 @@ library — is [docs/10-developer-guide.md](docs/10-developer-guide.md).
 ```bash
 pip install -r requirements.txt
 make artifacts      # ~30 s: train, export the model, build vectors and figures
-make test           # 90 ML + 63 escalation tests, 240 firmware checks
+make test           # 114 ML + 71 escalation + relay tests, 240 firmware checks
 ```
 
 Only the ML layer needs third-party packages. `escalation/`, `gateway/` and

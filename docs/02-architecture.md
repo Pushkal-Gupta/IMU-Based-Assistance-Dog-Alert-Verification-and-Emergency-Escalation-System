@@ -22,7 +22,7 @@
 │  32-tree random forest       │   ca_forest.c, 39 KiB flash
 │         │  p(spin)           │
 │         ▼                    │
-│  2-of-4 verification gate    │   ca_verify.c
+│  3-of-3 verification gate    │   ca_verify.c
 │         │  + 60 s refractory │
 └─────────┼────────────────────┘
           │  BLE GATT notify, retransmitted until acked

@@ -49,7 +49,7 @@ an older dog, a different breed, or a different training programme.
 
 ### 2.2 The false-alarm rate
 
-19.9 false alarms per hour at the shipped operating point, measured on
+22.1 false alarms per hour at the shipped operating point, measured on
 training-session motion. Discussed at length in
 [07-evaluation.md §5](07-evaluation.md#5-the-false-alarm-rate-stated-plainly).
 
@@ -60,10 +60,10 @@ probably much lower, **and we have not measured it.** The authors' unlabelled
 
 ### 2.3 The operating point is chosen on the data it is reported on
 
-The 2-of-4 @ p ≥ 0.45 policy was selected by inspecting the LOGO sweep. Its
-reported sensitivity of 0.769 is therefore optimistic by an unquantified amount.
+The 3-of-3 @ p ≥ 0.25 policy was selected by inspecting the LOGO sweep. Its
+reported sensitivity of 0.709 is therefore optimistic by an unquantified amount.
 A nested cross-validation would measure the optimism; we did not run one. Treat
-0.769 as an upper bound.
+0.709 as an upper bound.
 
 ### 2.4 Cued behaviour in a controlled setting
 

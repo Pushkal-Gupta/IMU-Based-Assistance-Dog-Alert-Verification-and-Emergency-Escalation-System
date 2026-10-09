@@ -155,7 +155,7 @@ def main() -> int:
         started = time.time()
         proc = subprocess.run(
             ["java", "-XX:+UseParallelGC", "-cp", str(JAR), "tlc2.TLC",
-             "-workers", "auto", "-nowarning", "-config", str(cfg),
+             "-workers", "auto", "-nowarning", "-noGenerateSpecTE", "-config", str(cfg),
              "-metadir", str(LOGS / f"states_{tag}"), str(HERE / "Escalation.tla")],
             capture_output=True, text=True, cwd=HERE,
         )

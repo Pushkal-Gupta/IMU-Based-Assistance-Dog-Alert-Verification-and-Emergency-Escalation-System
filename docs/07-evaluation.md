@@ -169,11 +169,11 @@ Selected rows from the 54-point sweep (`results.json → verification_sweep`):
 |---|---|---|---|---|
 | 0.45 | 1-of-N | 0.881 | 46.4 | 1.9 s |
 | 0.35 | 2-of-2 | 0.828 | 26.5 | 3.1 s |
-| **0.45** | **2-of-4** | **0.769** | **19.9** | **3.1 s** |
+| **0.25** | **3-of-3** | **0.709** | **22.1** | **4.1 s** |
 | 0.50 | 2-of-2 | 0.709 | 13.3 | 3.3 s |
 | 0.40 | 3-of-5 | 0.522 | 2.2 | 4.2 s |
 
-**Shipped: 2-of-4 at p ≥ 0.45.** Chosen by maximising sensitivity subject to a
+**Shipped: 3-of-3 at p ≥ 0.25.** Chosen by maximising sensitivity subject to a
 per-event false-alarm rate ≤ 5%, rather than by maximising F1 — a missed alert
 and a spurious one are not symmetric costs, and F1 pretends they are.
 
@@ -197,7 +197,7 @@ but that behaviour is not in this dataset and we have not measured it.
 
 ## 5. The false-alarm rate, stated plainly
 
-**19.9 false alarms per hour is high.** At face value the collar would fire
+**22.1 false alarms per hour is high.** At face value the collar would fire
 roughly every three minutes.
 
 ### 5.1 The external benchmark
@@ -206,7 +206,7 @@ roughly every three minutes.
 |---|---|---|---|
 | Non-EEG human-worn seizure wearables | 79.4–96% | **0.20–1.92 / 24 h** | [08-literature.md R11](08-literature.md#r11) |
 | Wrist-worn accelerometry, tonic-clonic seizures (meta-analysis subgroup) | 93% | **2.5 / 24 h** | [R10](08-literature.md#r10) |
-| **This system, shipped operating point** | **76.9%** | **19.9 / hour** | this work |
+| **This system, shipped operating point** | **70.9%** | **22.1 / hour** | this work |
 
 Roughly **two orders of magnitude worse** than the clinical state of the art. The
 comparison is not like-for-like — those devices detect a different phenomenon on a
@@ -330,7 +330,7 @@ data, with no hand-placed events.
 | Operating point chosen on the same data it is evaluated on | Medium | Stated; a nested CV would be needed to remove the optimism |
 | Cued behaviour, controlled setting | Medium | Inherited from the source dataset |
 
-The operating-point selection deserves emphasis: the 2-of-4 @ 0.45 policy was
-chosen by looking at the LOGO sweep, so its reported sensitivity of 0.769 is
+The operating-point selection deserves emphasis: the 3-of-3 @ 0.25 policy was
+chosen by looking at the LOGO sweep, so its reported sensitivity of 0.709 is
 optimistic by an unknown amount. A nested cross-validation would quantify it. We
 did not run one, and the figure should be treated as an upper bound.

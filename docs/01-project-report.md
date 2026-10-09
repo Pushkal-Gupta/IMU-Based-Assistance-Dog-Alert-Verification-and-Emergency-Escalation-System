@@ -2,6 +2,12 @@
 
 **Technical report**
 
+> The research write-up of this project is the manuscript in `paper/`
+> (see [11-research.md](11-research.md)). It adds nested and continuous-stream
+> evaluation, formal verification and simulation, and supersedes this report's
+> numbers where they differ. The operating point quoted here was regenerated
+> after the gate began to be tuned on the deployed 32-tree forest.
+
 Pushkal Gupta · Vanka Kaushik
 
 Source code, data-processing pipeline and evaluation artifacts:
@@ -41,7 +47,7 @@ by 39 tests. On real recordings, an unacknowledged alert reaches an emergency
 contact 181 s after the dog spins.
 
 We also report, rather than omit, the measurement that most constrains
-deployment: 19.9 false alarms per hour on spin-free training-session motion at
+deployment: 22.1 false alarms per hour on spin-free training-session motion at
 the shipped operating point.
 
 ---
@@ -184,7 +190,7 @@ COLLAR (ESP32 + MPU6050)  ──BLE──▶  RELAY (owner's phone)  ──HTTPS
   sample 51.2 Hz                      T1 = 60 s owner window            audit log
   2.6 s windows / 1.3 s stride        T2 = 120 s caregiver window       watchdog
   20 features → 32-tree forest        SMS / push + GPS                  dashboard
-  2-of-4 verification gate            15 s heartbeat
+  3-of-3 verification gate            15 s heartbeat
 ```
 
 **The key design decision** is that the escalation ladder runs on the phone, not
@@ -366,7 +372,7 @@ a single-second classification.
 | Vote threshold | Policy | Sensitivity | False alarms/hour | Median latency |
 |---|---|---|---|---|
 | 0.45 | 1-of-N | 0.881 | 46.4 | 1.9 s |
-| **0.45** | **2-of-4** | **0.769** | **19.9** | **3.1 s** |
+| **0.25** | **3-of-3** | **0.709** | **22.1** | **4.1 s** |
 | 0.40 | 3-of-5 | 0.522 | 2.2 | 4.2 s |
 
 Chosen by maximising sensitivity subject to a per-event false-alarm rate ≤ 5%,
@@ -407,7 +413,7 @@ events.
 
 ### 5.6 The measurement that constrains deployment
 
-**19.9 false alarms per hour** at the shipped operating point. At face value the
+**22.1 false alarms per hour** at the shipped operating point. At face value the
 collar fires every three minutes.
 
 **The comparison that matters.** Clinically-validated, non-EEG human-worn seizure
@@ -466,7 +472,7 @@ owner's phone dies mid-alert. On real recordings, an unacknowledged alert reache
 an emergency contact 181 seconds after the dog spins.
 
 We also measured something the source work does not report — a false-alarm rate of
-19.9 per hour on training-session motion — and it changed how we read our own
+22.1 per hour on training-session motion — and it changed how we read our own
 system. It is the reason the ladder requires an owner acknowledgement before
 anyone else is disturbed, and it is the first thing that must improve.
 

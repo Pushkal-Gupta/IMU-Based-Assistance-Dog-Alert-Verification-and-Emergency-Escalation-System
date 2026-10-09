@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-10-09T11:05:41Z",
+  "generated_at_utc": "2026-10-09T12:40:09Z",
   "n_per_scenario": 20000,
   "seed": 2025,
   "detector": {
@@ -4110,5 +4110,5 @@
       ]
     }
   ],
-  "runtime_seconds": 26.2
+  "runtime_seconds": 34.4
 }
