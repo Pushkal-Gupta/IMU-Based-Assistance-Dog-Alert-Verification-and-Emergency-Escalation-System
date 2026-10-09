@@ -179,6 +179,36 @@ static void ca_time_features(const ca_real *x, size_t n, ca_scratch *scratch,
 /* frequency domain                                                       */
 /* ---------------------------------------------------------------------- */
 
+/* Twiddle factors cos/sin(2*pi*m/n) for m in [0, n), rebuilt only when the
+ * window length changes (in practice: once, at the first window).
+ *
+ * The first implementation called cosf() and sinf() inside the inner loop --
+ * 2 x 66 x 133 = 17.6k libm calls per signal, 140k per window.  That is cheap
+ * on a laptop and not on an ESP32, where a float sinf() costs on the order of
+ * a hundred cycles.  Indexing a table by (k * i) mod n gives the same
+ * mathematical values with no transcendental call in the loop, and is *more*
+ * accurate: the direct form evaluated cosf() at float angles up to ~410 rad,
+ * where one ulp of the argument is ~3e-5 rad.  Define CA_DFT_DIRECT_TRIG to
+ * build the old path, which firmware/test/bench.c uses for comparison. */
+#ifndef CA_DFT_DIRECT_TRIG
+static ca_real ca_twiddle_cos[CA_MAX_WINDOW];
+static ca_real ca_twiddle_sin[CA_MAX_WINDOW];
+static size_t ca_twiddle_n = 0u;
+
+static void ca_twiddle_build(size_t n)
+{
+    if (ca_twiddle_n == n) {
+        return;
+    }
+    for (size_t m = 0; m < n; ++m) {
+        double angle = 2.0 * M_PI * (double)m / (double)n;
+        ca_twiddle_cos[m] = (ca_real)cos(angle);
+        ca_twiddle_sin[m] = (ca_real)sin(angle);
+    }
+    ca_twiddle_n = n;
+}
+#endif
+
 static void ca_freq_features(const ca_real *x, size_t n, ca_real fs_hz,
                              ca_scratch *scratch, ca_real *out)
 {
@@ -186,8 +216,8 @@ static void ca_freq_features(const ca_real *x, size_t n, ca_real fs_hz,
      * a power of two, so a radix-2 FFT would need zero-padding to 256 -- and
      * that changes the spectrum, so the device would no longer compute the same
      * features the model was trained on.  At 133 points the O(n^2) transform is
-     * ~18k complex multiply-accumulates per signal; eight signals every 1.3 s
-     * is a few milliseconds on a 240 MHz core, which the collar can afford. */
+     * ~8.8k complex multiply-accumulates per signal from a precomputed twiddle
+     * table; firmware/test/bench.c measures what that costs. */
     ca_real mean = 0.0f;
     for (size_t i = 0; i < n; ++i) {
         mean += x[i];
@@ -201,7 +231,11 @@ static void ca_freq_features(const ca_real *x, size_t n, ca_real fs_hz,
      * centring already zeroed it and it would otherwise dominate the
      * normalised distribution used for entropy and centroid. */
     size_t n_bins = n / 2u + 1u;
+#ifdef CA_DFT_DIRECT_TRIG
     const ca_real two_pi_over_n = (ca_real)(2.0 * M_PI) / (ca_real)n;
+#else
+    ca_twiddle_build(n);
+#endif
 
     ca_real total = 0.0f;
     size_t dominant = 1u;
@@ -210,12 +244,24 @@ static void ca_freq_features(const ca_real *x, size_t n, ca_real fs_hz,
     for (size_t k = 1u; k < n_bins; ++k) {
         ca_real real_part = 0.0f;
         ca_real imag_part = 0.0f;
+#ifdef CA_DFT_DIRECT_TRIG
         ca_real angle_step = two_pi_over_n * (ca_real)k;
         for (size_t i = 0; i < n; ++i) {
             ca_real angle = angle_step * (ca_real)i;
             real_part += scratch->centred[i] * cosf(angle);
             imag_part -= scratch->centred[i] * sinf(angle);
         }
+#else
+        size_t m = 0u; /* (k * i) mod n, advanced incrementally */
+        for (size_t i = 0; i < n; ++i) {
+            real_part += scratch->centred[i] * ca_twiddle_cos[m];
+            imag_part -= scratch->centred[i] * ca_twiddle_sin[m];
+            m += k;
+            if (m >= n) {
+                m -= n;
+            }
+        }
+#endif
         ca_real magnitude_squared = real_part * real_part + imag_part * imag_part;
         ca_real power = magnitude_squared / (ca_real)n;
         scratch->power[k] = power;

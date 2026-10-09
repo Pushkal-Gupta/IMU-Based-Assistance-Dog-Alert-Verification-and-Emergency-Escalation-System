@@ -155,6 +155,10 @@ class Relay:
     policy: EscalationPolicy
     notifier: Notifier
     backend: BackendClient | NullBackendClient
+    #: The dog this relay serves.  Heartbeats carry it because the backend
+    #: watchdog matches a relay to its open alerts by dog -- and an alert's
+    #: ``dog_id`` comes from the collar, not from the owner's contact record.
+    dog_id: str
     clock: Callable[[], float] = time.monotonic
     relay_id: str = "relay-1"
     heartbeat_seconds: float = 15.0
@@ -214,7 +218,11 @@ class Relay:
         if now - self._last_heartbeat >= self.heartbeat_seconds:
             self._last_heartbeat = now
             self.backend.report_heartbeat(
-                dog_id=self.policy.owner.contact_id,
+                # Must be the dog's id, not the owner's contact id: the watchdog
+                # pairs heartbeats with alerts on dog_id, and a mismatch makes
+                # every relay look as if it had never heartbeated -- which
+                # silently disables the dead-phone takeover.
+                dog_id=self.dog_id,
                 relay_id=self.relay_id,
                 open_alerts=len(self.engine.open_alerts()),
             )
@@ -368,7 +376,13 @@ def main() -> int:
         sleep=time.sleep,
     )
 
-    relay = Relay(policy=policy, notifier=notifier, backend=backend)
+    relay = Relay(
+        policy=policy,
+        notifier=notifier,
+        backend=backend,
+        dog_id=config["dog_id"],
+        relay_id=config.get("relay_id", "relay-1"),
+    )
 
     if args.source == "ble":
         return run_ble(relay, args.ble_address)

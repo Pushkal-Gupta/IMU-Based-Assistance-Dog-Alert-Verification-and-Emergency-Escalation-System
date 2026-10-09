@@ -1,5 +1,21 @@
 # Evaluation
 
+> **Research update.** This page documents the original single-level,
+> curated-event protocol. The paper in `paper/` (see
+> [11-research.md](11-research.md)) extends it in five ways:
+> - cluster-bootstrap confidence intervals and paired tests;
+> - session- and device-shift protocols;
+> - **nested** selection of the gate's operating point, which resolves §9's
+>   "chosen on the data it is evaluated on" caveat;
+> - **continuous-stream** false-alarm rates with the refractory period
+>   applied, which resolves §5.2 point 2;
+> - CNN/ROCKET baselines, ablations, and a simulated sensor-transfer analysis.
+>
+> The gate is now also tuned on the 32-tree forest that the firmware ships,
+> rather than on the 200-tree reference, so the operating point quoted below
+> is regenerated from `results.json`. Where this page and the paper differ,
+> the paper is authoritative.
+
 Every number here is produced by `ml/scripts/run_experiments.py` and stored in
 `ml/artifacts/results.json`. Regenerate with `make artifacts`.
 
@@ -189,7 +205,7 @@ roughly every three minutes.
 | System class | Sensitivity | False alarms | Source |
 |---|---|---|---|
 | Non-EEG human-worn seizure wearables | 79.4–96% | **0.20–1.92 / 24 h** | [08-literature.md R11](08-literature.md#r11) |
-| Accelerometry, tonic-clonic seizures (meta-analysis) | 93% | **2.5 / 24 h** | [R10](08-literature.md#r10) |
+| Wrist-worn accelerometry, tonic-clonic seizures (meta-analysis subgroup) | 93% | **2.5 / 24 h** | [R10](08-literature.md#r10) |
 | **This system, shipped operating point** | **76.9%** | **19.9 / hour** | this work |
 
 Roughly **two orders of magnitude worse** than the clinical state of the art. The

@@ -214,6 +214,33 @@ Two independent triggers:
 
 The second covers a relay that is alive and heartbeating but has somehow stalled.
 
+### 5.1 What model checking found (see `formal/` and the paper)
+
+The TLA⁺ model in `formal/Escalation.tla` checks this design under arbitrary
+phone deaths and network partitions. The watchdog as built:
+
+- **skips the caregiver tier.** A phone that dies shortly after mirroring an
+  alert gets the emergency contact paged at about 75 s, and the caregiver is
+  never paged. A partition does the same while the relay is alive, and the
+  relay then pages the emergency contact a second time.
+- **can page after an acknowledgement.** If the owner acknowledges and the phone
+  dies before that reaches the backend, the watchdog still escalates. This is
+  the designed "err towards escalating" behaviour, now with its cost stated.
+- **cannot prevent silent loss.** If the network is down when the gate fires
+  and the phone dies before reconnecting, the backend never hears of the alert.
+  Only a second path from the collar can fix this.
+
+The proposed **ladder-aware watchdog** continues the ladder on the relay's
+behalf instead of jumping to the emergency contact. It pages the caregiver once
+T1 has elapsed and the emergency contact once T1 + T2 has elapsed, both measured
+from the alert. It is verified never to skip the caregiver tier. It is not yet
+implemented in `EscalationWatchdog.java`.
+
+Writing the model also exposed a real bug: the relay heartbeated with the
+owner's contact id while the watchdog matched heartbeats by dog id, so the
+watchdog never saw a heartbeat. This is fixed in `gateway/relay.py`, and
+`gateway/tests/test_relay.py` is the regression test.
+
 > `backend/src/test/java/.../EscalationWatchdogTest.java` — 9 tests
 
 ---

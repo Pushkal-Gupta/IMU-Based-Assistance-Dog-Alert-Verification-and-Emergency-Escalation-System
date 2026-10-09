@@ -179,11 +179,27 @@ class LogoResult:
     oof_predictions: np.ndarray
     oof_scores: np.ndarray
     selection_frequency: dict[str, int]
+    #: Fitted model per held-out fold label, when ``keep_models`` was set.  The
+    #: continuous-stream evaluation needs them to score whole recordings of a
+    #: held-out group with a model that never saw that group.
+    models: dict = field(default_factory=dict)
 
 
-def run_logo(data: ExperimentData, models: Sequence[str] = ALL_MODELS) -> dict[str, LogoResult]:
+def run_logo(
+    data: ExperimentData,
+    models: Sequence[str] = ALL_MODELS,
+    fold_labels: np.ndarray | None = None,
+    keep_models: bool = False,
+) -> dict[str, LogoResult]:
+    """Leave-one-out over ``fold_labels`` (default: recording groups).
+
+    Passing session or device labels instead gives leave-one-session-out and
+    cross-device protocols with exactly the same fitting code, so the only thing
+    that differs between protocols is the split.
+    """
+    labels = data.groups if fold_labels is None else np.asarray(fold_labels, dtype=object)
     splitter = LeaveOneGroupOut()
-    folds = list(splitter.split(data.features, data.y, data.groups))
+    folds = list(splitter.split(data.features, data.y, labels))
 
     results: dict[str, LogoResult] = {}
     for name in models:
@@ -191,6 +207,7 @@ def run_logo(data: ExperimentData, models: Sequence[str] = ALL_MODELS) -> dict[s
         oof_scores = np.full(len(data.segments), np.nan, dtype=float)
         per_fold: list[dict] = []
         selection_counts: dict[str, int] = {}
+        fitted: dict = {}
 
         for train_idx, test_idx in folds:
             y_train = data.y[train_idx]
@@ -214,7 +231,9 @@ def run_logo(data: ExperimentData, models: Sequence[str] = ALL_MODELS) -> dict[s
             oof_predictions[test_idx] = predictions
             oof_scores[test_idx] = scores
 
-            held_out_group = str(data.groups[test_idx][0])
+            held_out_group = str(labels[test_idx][0])
+            if keep_models:
+                fitted[held_out_group] = model
             per_fold.append(
                 {
                     "group": held_out_group,
@@ -235,6 +254,7 @@ def run_logo(data: ExperimentData, models: Sequence[str] = ALL_MODELS) -> dict[s
             selection_frequency=dict(
                 sorted(selection_counts.items(), key=lambda kv: (-kv[1], kv[0]))
             ),
+            models=fitted,
         )
     return results
 

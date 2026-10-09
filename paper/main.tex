@@ -1,0 +1,121 @@
+%  MDPI Sensors submission.  Build: `make paper` from the repository root.
+%  Every number in this manuscript is a \R{key} lookup into
+%  generated/numbers.tex, which paper/scripts/make_numbers.py writes from the
+%  experiment artifacts.  Do not type a result into this file by hand.
+\documentclass[sensors,article,submit,moreauthors]{Definitions/mdpi}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\input{generated/numbers.tex}
+\input{generated/timeline_source.tex}
+% \input is not safe at the start of a tabular row (it breaks \midrule);
+% the primitive form is.
+\makeatletter
+\newcommand{\inputtable}[1]{\@@input #1 }
+\makeatother
+
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+\datereceived{ }
+\daterevised{ }
+\dateaccepted{ }
+\datepublished{ }
+\hreflink{https://doi.org/}
+
+\Title{Closing the Loop on Assistance-Dog Seizure Alerts: An IMU Collar with Streaming Verification, Formally Verified Escalation and a Quantified False-Alarm Requirement}
+
+\TitleCitation{Closing the Loop on Assistance-Dog Seizure Alerts}
+
+% TODO(authors): add ORCID iDs, e.g. \newcommand{\orcidauthorA}{0000-0000-0000-000X} and \orcidA{} after the name.
+\Author{Pushkal Gupta $^{1,}$* and Vanka Kaushik $^{1}$}
+
+\AuthorNames{Pushkal Gupta and Vanka Kaushik}
+
+\isAPAStyle{%
+       \AuthorCitation{Gupta, P., \& Kaushik, V.}
+         }{%
+        \isChicagoStyle{%
+        \AuthorCitation{Gupta, Pushkal, and Vanka Kaushik.}
+        }{
+        \AuthorCitation{Gupta, P.; Kaushik, V.}
+        }
+}
+
+% TODO(authors): full affiliation (department, institution, city, postcode, country) and e-mail addresses.
+\address{%
+$^{1}$ \quad Affiliation to be completed by the authors; pushkalgupta2005@gmail.com}
+
+\corres{Correspondence: pushkalgupta2005@gmail.com}
+
+\input{sections/abstract}
+\abstract{\AbstractText}
+
+\keyword{assistance dogs; seizure alert; inertial measurement unit; wearable sensing; streaming verification; alert escalation; formal verification; TLA+; Monte-Carlo simulation; edge machine learning}
+
+\begin{document}
+
+\input{sections/introduction}
+\input{sections/related}
+\input{sections/methods}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/conclusions}
+
+\vspace{6pt}
+
+\supplementary{The following supporting information is available with this article and in the project repository: Table S1: the full single-level verification-gate sweep (a), the policy chosen in every nested outer fold (b), and per-recording continuous-stream outcomes for the deployed model (c); Table S2: every TLC check with state counts (a), every simulation scenario (b), and the $(T_1,T_2)$ grid (c); Table S3: every robustness perturbation (a), every baseline and ablation (b), and the embedded size/accuracy front (c); File S1: the TLA$^+$ specification \texttt{Escalation.tla}; File S2: the simulation's assumptions, detector parameters and derived requirement.}
+
+\authorcontributions{Conceptualization, P.G. and V.K.; methodology, P.G.; software, P.G. and V.K.; validation, P.G. and V.K.; formal analysis, P.G.; investigation, P.G. and V.K.; data curation, P.G.; writing---original draft preparation, P.G.; writing---review and editing, P.G. and V.K.; visualization, P.G. All authors have read and agreed to the published version of the manuscript.}
+% TODO(authors): confirm the CRediT roles above reflect who did what.
+
+\funding{This research received no external funding.}
+
+\institutionalreview{Not applicable. This study is a secondary analysis of a publicly released, de-identified dataset; no animals or humans were involved in the work reported here. The original data collection was approved by the Dublin City University Research Ethics Committee (DCUREC/2025/065) and Beaumont Hospital REC (25/16), as reported by the source study~\cite{brady2025collar}.}
+
+\informedconsent{Not applicable.}
+
+\dataavailability{The dataset analysed is publicly available on figshare at \url{https://doi.org/10.6084/m9.figshare.30022441}~\cite{song2025figshare}. All code, the TLA$^+$ specification, the simulation, every generated artifact and the scripts that regenerate this manuscript's numbers and figures are available in the project repository (TODO(authors): insert the public repository URL and an archived release DOI, e.g., Zenodo, before submission).}
+
+\acknowledgments{The authors thank Brady et al. for releasing their annotated dataset, without which this work could not have been done. During the preparation of this work the authors used Claude (Anthropic) to assist with software implementation, statistical analysis, formal specification, literature verification and drafting of the manuscript. The authors reviewed and edited all generated material, verified every reference against its DOI, reproduced every reported number from the released code, and take full responsibility for the content of this publication.}
+% TODO(authors): review the GenAI statement above against MDPI's current policy and edit it to describe your actual use accurately.
+
+\conflictsofinterest{The authors declare no conflicts of interest.}
+
+\abbreviations{Abbreviations}{
+The following abbreviations are used in this manuscript:
+\\
+
+\noindent
+\begin{tabular}{@{}ll}
+AUC & area under the receiver operating characteristic curve\\
+BLE & Bluetooth Low Energy\\
+CI & confidence interval\\
+CNN & convolutional neural network\\
+DFT & discrete Fourier transform\\
+FA/h & false alarms per hour of spin-free motion\\
+IMU & inertial measurement unit\\
+LOGO & leave-one-group-out cross-validation\\
+LODO & leave-one-dog-out cross-validation\\
+RF & random forest\\
+TLC & the TLA$^+$ explicit-state model checker
+\end{tabular}
+}
+
+\appendixtitles{yes}
+\appendixstart
+\appendix
+\input{sections/appendix}
+
+\begin{adjustwidth}{-\extralength}{0cm}
+\reftitle{References}
+\bibliography{references}
+\PublishersNote{}
+\end{adjustwidth}
+\end{document}

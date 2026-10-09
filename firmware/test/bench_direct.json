@@ -1,0 +1,17 @@
+{
+  "variant": "direct_trig",
+  "iterations": 2000,
+  "repeats": 7,
+  "host_us_per_window_extract": 262.578,
+  "host_us_per_window_total": 259.909,
+  "host_us_per_forest_predict": 0.2445,
+  "window_samples": 133,
+  "n_trees": 32,
+  "n_nodes": 2880,
+  "mean_node_visits_per_window": 171.5,
+  "dft_real_macs_per_window": 140448,
+  "transcendental_calls_per_window_in_dft": 140448,
+  "sort_compares_per_window_worst": 70224,
+  "scratch_bytes": 6724,
+  "stride_seconds": 1.3086
+}

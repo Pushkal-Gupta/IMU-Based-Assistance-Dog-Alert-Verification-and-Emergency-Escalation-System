@@ -5,7 +5,7 @@ Outputs (under ``ml/artifacts/`` by default):
 
 ``dataset_summary.json``   descriptive statistics of the figshare package
 ``results.json``           every metric quoted in ``docs/07-evaluation.md``
-``model_random_forest.joblib``  the deployable pipeline, fitted on all data
+``model_deployed.joblib``  the deployable (embedded) pipeline, fitted on all data
 
 Usage::
 
@@ -34,24 +34,17 @@ from canine_alert.evaluate import (
     run_logo,
     run_within_subject,
 )
-from canine_alert.models import build_model
-from canine_alert.verification import sweep_policies
+from canine_alert.models import EMBEDDED_MODEL, build_model
+from canine_alert.verification import MAX_FALSE_ALARM_RATE, select_operating_point, sweep_grid
 
-POLICIES = [(1, 1), (1, 2), (1, 3), (2, 2), (2, 3), (2, 4), (3, 3), (3, 4), (3, 5)]
-VOTE_THRESHOLDS = [0.25, 0.30, 0.35, 0.40, 0.45, 0.50]
 
-#: The collar is a safety device: a missed alert is far more costly than a
-#: spurious one, because a spurious one only costs the owner a dismissal tap
-#: (and the caregiver is never paged unless the owner also fails to respond).
-#: We therefore pick the operating point that maximises sensitivity subject to
-#: an upper bound on the per-event false-alarm rate, rather than maximising a
-#: symmetric score like F1.
-MAX_FALSE_ALARM_RATE = 0.05
 
 #: The model the firmware ships.  The verification sweep is run against it, not
 #: against whichever model happens to win on segment F1, so the reported
-#: operating point describes the system that is actually deployed.
-DEPLOYED_MODEL = "random_forest"
+#: operating point describes the system that is actually deployed.  (An earlier
+#: version tuned the gate on the 200-tree reference forest and then shipped the
+#: 32-tree one; the gate policy must be tuned on the model that runs it.)
+DEPLOYED_MODEL = EMBEDDED_MODEL
 
 
 def to_jsonable(value):
@@ -126,33 +119,9 @@ def main() -> int:
 
     print("[5/6] verification-gate sweep (K-of-N x vote threshold) ...", flush=True)
     streams, labels, onsets = event_probability_streams(data, logo[DEPLOYED_MODEL].oof_scores)
-    sweep: list[dict] = []
-    for threshold in VOTE_THRESHOLDS:
-        for row in sweep_policies(
-            streams,
-            labels,
-            POLICIES,
-            DEFAULT_CONFIG,
-            probability_threshold=threshold,
-            onset_by_event=onsets,
-            event_seconds=summary["event_seconds"],
-        ):
-            sweep.append({"vote_threshold": threshold, **row})
+    sweep = sweep_grid(streams, labels, onsets, summary["event_seconds"], DEFAULT_CONFIG)
 
-    feasible = [
-        row
-        for row in sweep
-        if row["false_alarm_rate"] <= MAX_FALSE_ALARM_RATE and row["sensitivity"] > 0
-    ]
-    # Tie-break towards fewer false alarms, then towards a lower latency.
-    operating_point = (
-        min(
-            feasible,
-            key=lambda r: (-r["sensitivity"], r["false_alarm_rate"], r["mean_latency_s"]),
-        )
-        if feasible
-        else None
-    )
+    operating_point = select_operating_point(sweep, MAX_FALSE_ALARM_RATE)
     for row in sweep:
         marker = "  <-- selected" if row is operating_point else ""
         print(
@@ -189,10 +158,10 @@ def main() -> int:
     }
 
     if not args.skip_export:
-        print("[6/6] fitting deployable Random Forest on the full dataset ...", flush=True)
+        print(f"[6/6] fitting deployable {DEPLOYED_MODEL} on the full dataset ...", flush=True)
         import joblib
 
-        final = build_model("random_forest", data.feature_names, DEFAULT_CONFIG)
+        final = build_model(DEPLOYED_MODEL, data.feature_names, DEFAULT_CONFIG)
         final.fit(data.features, data.y)
         joblib.dump(
             {
@@ -202,10 +171,10 @@ def main() -> int:
                 "fs_hz": data.segments.fs_hz,
                 "config": DEFAULT_CONFIG.as_dict(),
             },
-            args.artifact_dir / "model_random_forest.joblib",
+            args.artifact_dir / "model_deployed.joblib",
         )
         results["deployed_model"] = {
-            "name": "random_forest",
+            "name": DEPLOYED_MODEL,
             "selected_features": final.named_steps["select"].selected_names(),
             "selection_stages": final.named_steps["select"].stage_sizes_,
             "n_trees": final.named_steps["clf"].n_estimators,

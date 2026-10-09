@@ -1,0 +1,26 @@
+% The escalation ladder (relay) with the backend watchdog's take-over edges.
+\begin{tikzpicture}[
+    font=\footnotesize, >={Stealth[length=2mm]},
+    st/.style={draw=black!70, rounded corners=3pt, fill=black!3, minimum height=7mm,
+               minimum width=2.5cm, align=center, inner sep=3pt},
+    term/.style={st, fill=black!10, double, double distance=0.8pt},
+    edge/.style={->, thick, black!75},
+    wd/.style={->, thick, dashed, black!55},
+    lab/.style={font=\scriptsize, align=center, fill=white, inner sep=1pt}]
+  \node[st]   (po) {\textsc{PendingOwner}};
+  \node[st,   right=2.4cm of po] (pc) {\textsc{PendingCaregiver}};
+  \node[term, right=2.4cm of pc] (em) {\textsc{Escalated}\\\textsc{Emergency}};
+  \node[term, below=1.25cm of po] (ao) {\textsc{AckByOwner}};
+  \node[term, below=1.25cm of pc] (ac) {\textsc{AckByCaregiver}};
+  \node[term, above=1.0cm of po] (di) {\textsc{Dismissed}};
+  \node[left=0.9cm of po, font=\scriptsize, align=center] (start) {gate\\fires};
+  \draw[edge] (start) -- (po);
+  \draw[edge] (po) -- node[lab, above] {$t \geq T_1$\\page caregiver} (pc);
+  \draw[edge] (pc) -- node[lab, above] {$t \geq T_1{+}T_2$\\page emergency} (em);
+  \draw[edge] (po) -- node[lab, left] {owner\\acks} (ao);
+  \draw[edge] (pc) -- node[lab, right] {caregiver\\acks} (ac);
+  \draw[edge] (pc.south west) -- node[lab, sloped, below] {owner acks} (ao.north east);
+  \draw[edge] (po) -- node[lab, left] {owner dismisses} (di);
+  \draw[wd] (po.north east) to[bend left=28] node[lab, above] {watchdog (as built): relay silent ${>}\,W$} (em.north west);
+  \draw[wd] (pc.south east) to[bend right=0] node[lab, sloped, below] {watchdog: silent ${>}\,W$} (em.south west);
+\end{tikzpicture}

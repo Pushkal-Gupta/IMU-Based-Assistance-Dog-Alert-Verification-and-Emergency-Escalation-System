@@ -9,6 +9,11 @@
 [10-developer-guide.md](10-developer-guide.md) and go nowhere else until
 something in it sends you elsewhere.
 
+**If you are reviewing the research** — read the manuscript
+(`paper/build/main.pdf`, built by `make paper`) and
+[11-research.md](11-research.md); the paper supersedes the single-level
+numbers in 07 where they differ.
+
 **If you are reviewing the work** — read in this order:
 
 1. [01-project-report.md](01-project-report.md) — the full report: problem,
@@ -39,6 +44,7 @@ something in it sends you elsewhere.
 | 08 | [Related work](08-literature.md) | Five research areas, an annotated bibliography, and the precise novelty claim |
 | 09 | [Limitations](09-limitations.md) | What is not validated, and what would have to change |
 | 10 | [Developer guide](10-developer-guide.md) | Setup, repository tour, recipes, extension points, testing, debugging, performance |
+| 11 | [Research programme](11-research.md) | The paper in `paper/`: what each analysis is, how to regenerate it, what it changed |
 
 ## Where the numbers come from
 

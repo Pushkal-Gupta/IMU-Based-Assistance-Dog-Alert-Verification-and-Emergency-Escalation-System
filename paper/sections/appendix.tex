@@ -1,0 +1,19 @@
+\section{The Counterexample to \texttt{NoPrematureEmergency}}
+\label{app:cex}
+Table~\ref{tab:cex} reproduces TLC's shortest counterexample for the system as built, keeping only the states in which something other than the clock changed. One tick is \R{tlc.tick}\,s. The alert is mirrored to the backend at tick 0, the phone dies at tick 1, and once the backend has heard nothing for more than $W=\R{tlc.w}$ ticks the watchdog pages the emergency contact at tick \R{tlc.premature.tick}---while the caregiver, whom the relay would have paged at $T_1=\R{tlc.t1}$ ticks, is never paged.
+
+\begin{table}[H]
+\caption{Counterexample trace (TLC, Direct watchdog). \emph{Relay} and \emph{backend} are the two parties' views of the alert; \emph{last HB} is the tick of the last heartbeat the backend received; \emph{relay pages} counts relay notifications to the owner (O), caregiver (C) and emergency contact (E); \emph{WD} counts watchdog emergency pages.\label{tab:cex}}
+\small
+\begin{tabularx}{\textwidth}{rrlllXlcr}
+\toprule
+\textbf{\#} & \textbf{Tick} & \textbf{Relay} & \textbf{Phone} & \textbf{Network} & \textbf{Backend} & \textbf{Last HB} & \textbf{Relay pages} & \textbf{WD}\\
+\midrule
+\inputtable{generated/tables/tlc_cex.tex}
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Reproducing This Paper}
+\label{app:repro}
+Every number, table and figure in this paper is regenerated from the public dataset by one command, \texttt{make all-research}, followed by \texttt{make paper}. The pipeline runs the detection experiments, the nested and continuous-stream evaluation, the ablations and robustness analysis, the TLC model checks, the property-based tests, the simulation and the host benchmark; writes JSON artifacts; and generates a file of \LaTeX{} macros from them. The manuscript contains no typed results: a build step fails if it cites an undefined number or contains a literal equal to a generated one.

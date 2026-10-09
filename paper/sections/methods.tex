@@ -1,0 +1,109 @@
+\section{Materials and Methods}
+\label{sec:methods}
+
+\subsection{System Overview}
+The system has three nodes (Figure~\ref{fig:arch}). The \emph{collar} samples a six-axis IMU, classifies a window every stride, and raises an alert when its verification gate fires. The \emph{relay}, the owner's phone, receives the alert over Bluetooth Low Energy and runs the escalation ladder. The \emph{backend} keeps an append-only record of every alert, serves a caregiver dashboard, and runs a watchdog that acts if the relay falls silent while an alert is open. The ladder runs on the phone rather than in the cloud deliberately: the alert matters most where connectivity is worst, and the owner's acknowledgement is a local interaction. The cost---the phone becomes a single point of failure---is what the watchdog, and Section~\ref{sec:formal}, address.
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{\input{figures/architecture}}
+\caption{System architecture. Detection runs on the collar, the escalation ladder on the owner's phone, and the backend keeps the record and acts as a fallback when the phone goes silent.\label{fig:arch}}
+\end{figure}
+
+\subsection{Dataset}
+\label{sec:data}
+We use the public release accompanying Brady et al.~\cite{brady2025collar,song2025figshare}: \R{ds.files}~recordings from \R{ds.sessions}~collection sessions and two Shimmer3 units, \R{ds.seconds}\,s (\R{ds.minutes}\,min) of motion with \R{ds.spins}~annotated spin alerts totalling \R{ds.spinseconds}\,s. Six trained dogs (two Golden Retrievers, two Labradors, two Standard Poodles, aged 1.5--2 years) performed a cued double clockwise spin in training sessions; annotation was against synchronised video~\cite{brady2025collar}. We use the low-noise accelerometer and the gyroscope, the channels our collar's MPU6050 also provides.
+
+Two properties of the release shape the analysis. First, the timestamps give a sampling rate of \R{ds.fs}\,Hz (the Shimmer3's 1024/20 divider), not the 50\,Hz used in the source paper; our spin durations (\R{ds.durmin}--\R{ds.durmax}\,s, median \R{ds.durmedian}\,s) are uniformly 2.4\% shorter than the published ones, exactly the ratio 50/51.2, so we derive all window lengths in samples from the measured rate. Second, the release does not identify the dog in each recording. A literal leave-one-dog-out (LODO) split cannot be reproduced, so we hold out \emph{recording groups} (\R{ds.groups}~groups, \R{ds.eventgroups}~of which yield curated events). A recording group never splits a behavioural episode or a recording across folds, but two recordings of the same dog may fall in different folds; our cross-subject estimates may therefore be optimistic relative to LODO, and we add session- and device-level protocols (Section~\ref{sec:protocols}) partly to bound this.
+
+The gyroscope saturates: \R{sr.gyrosatspin}\% of spin samples and \R{sr.gyrosatnonspin}\% of non-spin samples have at least one axis at the \R{sr.gyrofs}\,\textdegree{}/s full-scale limit. A collar configured for a wider range would see values the training distribution never contained; Section~\ref{sec:robust} examines the consequences.
+
+\subsection{Detection Pipeline}
+\label{sec:pipeline}
+We re-implement the pipeline of~\cite{brady2025collar}. Signals are cut into \R{cfg.window}\,s windows (\R{cfg.winsamples}~samples) with a \R{cfg.stride}\,s stride (\R{cfg.stridesamples}~samples); a window is labelled \emph{spin} if at least half its samples are annotated spin. For the curated-event protocol each annotated spin is centred in a \R{cfg.eventseconds}\,s event (\R{cfg.eventsamples}~samples, exactly five windows), and spin-free spans at least 1\,s from any spin are tiled into negative events, giving \R{ds.events}~events (\R{ds.posevents}~positive) and \R{ds.windows}~windows (\R{ds.poswindows}~positive).
+
+From the six channels we derive eight signals (the three axes of each sensor and the rotation-invariant magnitudes $|a|$ and $|g|$) and compute 13 time-domain and 5 frequency-domain statistics per signal plus the 15 pairwise channel correlations: \R{cfg.nfeat}~features. A three-stage selector (variance filter, pruning of pairs with $|r|>0.95$, ANOVA $F$-test) keeps \R{cfg.nsel}. Selection, scaling and fitting all happen inside each training fold.
+
+We evaluate the four classifiers of the source study---random forest (RF, 200 trees, depth 12), RBF support-vector machine, Gaussian naive Bayes and logistic regression---and the heuristic baseline (a threshold on mean $|g|$, tuned on the training fold). The model the collar ships is a smaller forest (32 trees, depth 8, \R{fw.kib}\,KiB of flash tables), and every gate and stream result below refers to it unless stated otherwise. As additional baselines on raw windows we evaluate a three-block 1-D CNN (\R{abl.cnnparams} parameters) and ROCKET with 2000 random kernels and a ridge classifier~\cite{dempster2020rocket}, plus histogram gradient boosting on the features.
+
+\subsection{Streaming Verification Gate}
+\label{sec:gate}
+A single window classified as spin is not an alert. Every stride the gate receives the window's probability $p_t$, records the vote $v_t = \mathbf{1}[p_t \geq \theta]$, and fires when
+\begin{equation}
+\sum_{i=t-N+1}^{t} v_i \;\geq\; K \quad\text{and}\quad t - t_{\text{last}} \geq R,
+\label{eq:gate}
+\end{equation}
+where $t_{\text{last}}$ is the previous alert and $R=\R{cfg.refractory}$\,s is a refractory period. On firing, the vote buffer is cleared, so that one episode cannot re-fire on stale evidence when the refractory period ends. The alert's confidence is the mean probability of the voting windows. The policy $(\theta,K,N)$ is searched over $\theta \in \{0.25,0.30,\dots,0.50\}$ and nine $(K,N)$ pairs with $1\leq K\leq N\leq 5$, choosing the policy that maximises event sensitivity subject to a per-event false-alarm rate of at most \R{cfg.maxfar}\%, ties broken by fewer false alarms and then lower latency. Because a missed alert and a spurious one have asymmetric costs (a spurious one costs the owner a dismissal), we do not optimise F1.
+
+\subsection{Evaluation Protocols}
+\label{sec:protocols}
+
+\textbf{Segment and event level.} Following~\cite{brady2025collar}, we report window-level (segment) metrics and event-level metrics in which a curated event counts as detected if any of its windows is positive. Under leave-one-group-out (LOGO) all out-of-fold predictions are pooled.
+
+\textbf{Shift protocols.} Leave-one-session-out holds out each of the three collection sessions (different days), and leave-one-device-out holds out each Shimmer unit (one session used a different unit), giving temporal- and device-shift estimates with exactly the same fitting code.
+
+\textbf{Nested selection of the gate.} Selecting $(\theta,K,N)$ on the same out-of-fold scores that are then reported biases the reported sensitivity upward~\cite{varma2006bias,cawley2010overfitting}. In the nested protocol, for each held-out group $g$ an inner LOGO over the remaining groups produces out-of-fold scores, the policy is selected on those, and the model refitted on all remaining groups is applied with that policy to $g$. Nothing about $g$ influences the policy applied to it.
+
+\textbf{Continuous streams.} The curated protocol never asks the question a deployed collar faces: \emph{when} does an alert exist in an unbroken stream? We therefore replay every recording end to end---windows every stride, scored by the fold model that never saw the recording's group, through the gate of Equation~(\ref{eq:gate}) with its nested policy. We score alerts with the any-overlap convention of seizure-detection evaluation~\cite{shah2021metrics,dan2025szcore}: an alert at time $t$ is a true detection of a spin $[t_{\text{on}}, t_{\text{off}}]$ if the window that completed the vote overlaps it,
+\begin{equation}
+t_{\text{on}} \;\leq\; t \;\leq\; t_{\text{off}} + W_{\text{win}} + \tau,
+\label{eq:overlap}
+\end{equation}
+where $W_{\text{win}}$ is the window length and $\tau\geq 0$ an optional post-event tolerance (default 0); every other alert is a false alarm. The false-alarm rate is normalised by \emph{spin-free exposure}, the stream time outside the union of the intervals in Equation~(\ref{eq:overlap}). Spins closer together than $R$ are merged into one \emph{alert episode}, the unit the gate is designed to report once; we report per-spin sensitivity with $R=0$ and per-episode sensitivity with $R=\R{cfg.refractory}$\,s. The streams total \R{ds.hours}\,h; we report $\tau$ as a sensitivity analysis because alerts a few seconds after a spin are behaviourally part of the episode.
+
+\textbf{Uncertainty and tests.} Windows within a recording are strongly dependent, so every interval resamples whole recording groups (cluster percentile bootstrap~\cite{field2007clustered,efron1993bootstrap}, \R{stat.nboot}~resamples). False-alarm rates additionally carry exact Garwood Poisson intervals~\cite{garwood1936} and proportions Wilson score intervals~\cite{wilson1927}. Models are compared against the deployed forest with paired cluster-bootstrap differences in F1 and AUC (Holm-adjusted~\cite{holm1979}), Wilcoxon signed-rank tests on per-fold F1~\cite{wilcoxon1945}, and exact McNemar tests on event-level correctness~\cite{dietterich1998tests}.
+
+\subsection{Escalation Protocol}
+\label{sec:ladder}
+When the gate fires the relay opens an alert in \textsc{PendingOwner} and notifies the owner locally (Figure~\ref{fig:sm}). If the owner neither acknowledges nor dismisses within $T_1=\R{esc.t1}$\,s, the caregiver is paged and the alert moves to \textsc{PendingCaregiver}; if the caregiver does not acknowledge within a further $T_2=\R{esc.t2}$\,s, the emergency contact is paged. The emergency contact should be a named person or an accredited monitoring service, not an automated call to emergency services. Design commitments, each enforced by tests, are: deadlines are evaluated on an injected monotonic clock (a wall clock can jump); each channel is paged at most once per alert; ingestion is idempotent, because an alert's identity is derived from the collar's episode rather than from arrival time and BLE delivery is at-least-once; a channel that cannot be reached does not stall the ladder; terminal states absorb, so a late acknowledgement is recorded but does not withdraw an escalation; and stale location fixes are dropped rather than sent. While an alert is open the relay heartbeats to the backend every \R{esc.hb}\,s; the backend watchdog, as built, pages the emergency contact directly if the relay is silent for more than $W=\R{esc.w}$\,s.
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{\input{figures/statemachine}}
+\caption{The escalation ladder run by the relay (solid) and the backend watchdog's take-over edges as built (dashed). Double borders mark terminal states. Section~\ref{sec:formal-results} shows why the dashed edge from \textsc{PendingOwner} is a design flaw and gives the ladder-aware replacement.\label{fig:sm}}
+\end{figure}
+
+\subsection{Formal Model and Conformance Testing}
+\label{sec:formal}
+We specify one alert episode in TLA$^+$~\cite{lamport2002specifying} (file S1): the relay's ladder, the owner and caregiver (who may respond at any moment, or never), per-episode caregiver reachability, a network between relay and backend that may partition and heal at any time, a relay that may die, heartbeats, transition mirroring with an offline queue, and the watchdog. Time is discrete with one tick per heartbeat interval, so $T_1$, $T_2$ and $W$ are \R{tlc.t1}, \R{tlc.t2} and \R{tlc.w} ticks; ticks are \emph{urgent}---time cannot pass while a timer, heartbeat or watchdog sweep is due---which models drivers that run at least once per tick. The check is bounded at \R{tlc.horizon}~ticks, beyond the latest possible escalation. A constant selects the watchdog variant: \emph{Direct} (as built) or \emph{Ladder}, which on relay silence continues the ladder on the relay's behalf---paging the caregiver once $T_1$ has elapsed and the emergency contact once $T_1+T_2$ has elapsed, both measured from the alert. Each property is checked in its own TLC run~\cite{yu1999tlc} so that one violation cannot mask another, and reachability witnesses (properties that \emph{must} fail) guard against vacuous passes.
+
+To connect the model to the code, property-based tests~\cite{maciver2019hypothesis} drive the shipped engine with random interleavings of clock advances, ticks, acknowledgements, dismissals, cancellations and duplicate submissions, under random policies and delivery failures, checking the model's invariants after every step (\R{prop.examples}~examples per property).
+
+\subsection{End-to-End Monte-Carlo Simulation}
+\label{sec:sim}
+Model checking says which outcomes are possible; it does not say how likely they are. We simulate genuine alert episodes in one-second steps (the relay's tick rate) with the \emph{real} escalation engine and a port of the watchdog. Each episode samples: whether the collar detects the alert (probability equal to the measured nested continuous-stream episode sensitivity) and its latency (drawn from the measured latencies); optionally, up to $M$ repetitions of the alert 30\,s apart if it goes undetected; the owner's response (whether, and a log-normal delay); the caregiver's availability and delay; per-page delivery loss; and, in stress scenarios, relay death or a network partition at a uniformly random time in the first 240\,s. All human parameters are \emph{assumptions} (Table~\ref{tab:assumptions}), and we report a sensitivity analysis over them. Each scenario uses \R{sim.n}~episodes.
+
+\begin{table}[H]
+\caption{Behavioural assumptions of the simulation. Response delays are log-normal with the given median and log-scale $\sigma$. These are not measurements; Section~\ref{sec:sim-results} varies them.\label{tab:assumptions}}
+\begin{tabularx}{\textwidth}{lCCC}
+\toprule
+\textbf{Party} & \textbf{P(responds)} & \textbf{Median delay (s)} & $\boldsymbol{\sigma}$\\
+\midrule
+Owner, awake & \R{asm.awake.p} & \R{asm.awake.med} & \R{asm.awake.sig}\\
+Owner, asleep & \R{asm.asleep.p} & \R{asm.asleep.med} & \R{asm.asleep.sig}\\
+Owner, incapacitated & 0 & --- & ---\\
+Caregiver & \R{asm.care.p} & \R{asm.care.med} & \R{asm.care.sig}\\
+Emergency contact (monitoring service) & \R{asm.emerg.p} & \R{asm.emerg.med} & \R{asm.emerg.sig}\\
+\midrule
+Page delivery loss (each page) & \multicolumn{3}{c}{\R{asm.loss}}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{False-alarm burden.} A false alarm reaches the caregiver only if the owner does not dismiss it within $T_1$, and the emergency tier only if the caregiver then does not answer within $T_2$. With a false-alarm rate $\lambda$ (per hour of wear), $h_w$ waking and $h_s$ sleeping hours per day and owner response CDFs $F_w$, $F_s$, the expected caregiver pages per day are
+\begin{equation}
+C(\lambda) \;=\; \lambda \left[\, h_w \bigl(1 - F_w(T_1)\bigr) + h_s \bigl(1 - F_s(T_1)\bigr) \right],
+\label{eq:burden}
+\end{equation}
+and emergency pages per day are $C(\lambda)\,[1-(1-\ell)F_c(T_2)]$, with $F_c$ the caregiver CDF and $\ell$ the page-loss probability. We assume the owner dismisses a false alarm on the same delay distribution with which they would acknowledge a real one, and $h_w=16$, $h_s=8$. Equation~(\ref{eq:burden}) is checked against the simulation in the test suite. Inverting it for a target of one caregiver page per week gives the largest tolerable $\lambda$.
+
+\subsection{Embedded Implementation and Sensor Transfer}
+\label{sec:embedded}
+The collar's algorithmic core (features, forest walk, gate, sample ring) is portable C99 with no Arduino dependency, so it compiles on a host and is tested against golden vectors produced by the Python pipeline from real dataset windows. The fitted forest is transpiled to flat integer and float tables; the exporter refuses to write a model whose transpiled predictions differ from scikit-learn's by more than $10^{-6}$. Variances use a two-pass computation: the one-pass form loses too much precision in float32 on a gyroscope channel. The frequency features use a direct 133-point DFT, because zero-padding to a power of two for an FFT would change the spectrum the model was trained on; the DFT reads a precomputed twiddle table rather than calling \texttt{sinf}/\texttt{cosf} in the inner loop. We measure per-window cost on the host and report machine-independent operation counts.
+
+To study transfer to the MPU6050~\cite{invensense2013mpu6000} without hardware, we perturb held-out windows only, with models trained on clean data, using: rigid collar rotations about each device axis and uniformly random rotations in SO(3); the datasheet's noise densities, zero-rate and zero-$g$ offsets and sensitivity tolerances; clipping and 16-bit quantisation at the configured full scale; a narrower gyroscope full scale; sampling jitter; and sampling-rate mismatch. We repeat the rotations with a model trained on rotation-augmented data~\cite{um2017augmentation} and with a model restricted to the rotation-invariant magnitude features.
+
+\subsection{Software and Reproducibility}
+All analyses use Python with NumPy, SciPy, scikit-learn and PyTorch~\cite{harris2020numpy,virtanen2020scipy,pedregosa2011sklearn,paszke2019pytorch}; the escalation layer and the simulation use only the Python standard library. A single command regenerates every artifact, figure and number in this paper; fixed seeds are used throughout.
+
+\textbf{Use of generative AI.} A large language model (Claude, Anthropic) was used to assist with implementing the analysis software, the TLA$^+$ specification and the simulation, with verifying bibliographic metadata, and with drafting the manuscript. It was not used to generate or alter data. All analyses run from the released code on the public dataset, every reported number is regenerated from that code (Appendix~\ref{app:repro}), every reference was checked against its DOI, and the authors reviewed and take responsibility for all content.

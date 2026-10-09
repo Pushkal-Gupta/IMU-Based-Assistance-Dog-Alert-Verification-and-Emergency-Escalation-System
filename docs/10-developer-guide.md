@@ -440,7 +440,7 @@ Prefer this to `test_acknowledge_2`.
 |---|---|---|
 | `ModuleNotFoundError: numpy._core.numeric` | The NumPy 2 pickle shim's version probe broke | See §3.1 |
 | `no .pkl files under spinning_dataset` | Dataset not downloaded | See §3.2 |
-| `model_random_forest.joblib not found` | Ran `replay.py` before training | `make experiments` |
+| `model_deployed.joblib not found` | Ran `replay.py` before training | `make experiments` |
 | `vectors.bin is missing` | Firmware test run before generating vectors | `make vectors` |
 | Firmware test: feature mismatches | `features.py` and `ca_features.c` have diverged | Check ordering and offsets; use two-pass moments |
 | Firmware test: `CA_N_NODES` mismatch | `model.h` is stale | `make export` |

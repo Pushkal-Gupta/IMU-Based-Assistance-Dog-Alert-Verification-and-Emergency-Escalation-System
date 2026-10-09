@@ -12,8 +12,12 @@ scipy>=1.10,<2
 joblib>=1.3,<2
 matplotlib>=3.7,<4
 
-# Tests
+# Research analyses (ml/scripts/run_ablations.py: 1-D CNN baseline)
+torch>=2.2,<3
+
+# Tests (hypothesis: property-based conformance tests of the escalation engine)
 pytest>=7.4,<9
+hypothesis>=6.100,<7
 
 # Optional: BLE transport for gateway/relay.py --source ble.
 # Not required for the replay harness, the tests, or the demo.

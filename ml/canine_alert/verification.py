@@ -242,3 +242,67 @@ def sweep_policies(
             }
         )
     return results
+
+
+#: The collar is a safety device: a missed alert costs far more than a spurious
+#: one, which only costs the owner a dismissal tap.  The operating point is
+#: therefore the one that maximises sensitivity subject to an upper bound on the
+#: per-event false-alarm rate, not the one that maximises a symmetric score.
+MAX_FALSE_ALARM_RATE = 0.05
+
+
+def select_operating_point(rows: Sequence[dict], max_false_alarm_rate: float = MAX_FALSE_ALARM_RATE) -> dict | None:
+    """Pick the policy the collar ships from a sweep.
+
+    Maximise sensitivity subject to ``false_alarm_rate <= max_false_alarm_rate``;
+    tie-break towards fewer false alarms, then towards lower latency.  Shared by
+    the single-level sweep in ``run_experiments.py`` and by the nested
+    cross-validation, so both apply exactly the same rule.
+    """
+    feasible = [
+        row
+        for row in rows
+        if row["false_alarm_rate"] <= max_false_alarm_rate and row["sensitivity"] > 0
+    ]
+    if not feasible:
+        return None
+    return min(
+        feasible,
+        key=lambda r: (
+            -r["sensitivity"],
+            r["false_alarm_rate"],
+            r["mean_latency_s"] if np.isfinite(r["mean_latency_s"]) else np.inf,
+        ),
+    )
+
+
+#: The policy grid every sweep in the report searches.
+SWEEP_POLICIES: tuple[tuple[int, int], ...] = (
+    (1, 1), (1, 2), (1, 3), (2, 2), (2, 3), (2, 4), (3, 3), (3, 4), (3, 5),
+)
+SWEEP_THRESHOLDS: tuple[float, ...] = (0.25, 0.30, 0.35, 0.40, 0.45, 0.50)
+
+
+def sweep_grid(
+    probabilities_by_event: dict[str, np.ndarray],
+    event_labels: dict[str, int],
+    onset_by_event: dict[str, float] | None,
+    event_seconds: float | None,
+    config: PipelineConfig = DEFAULT_CONFIG,
+    policies: Sequence[tuple[int, int]] = SWEEP_POLICIES,
+    thresholds: Sequence[float] = SWEEP_THRESHOLDS,
+) -> list[dict]:
+    """:func:`sweep_policies` over every vote threshold in ``thresholds``."""
+    rows: list[dict] = []
+    for threshold in thresholds:
+        for row in sweep_policies(
+            probabilities_by_event,
+            event_labels,
+            policies,
+            config,
+            probability_threshold=threshold,
+            onset_by_event=onset_by_event,
+            event_seconds=event_seconds,
+        ):
+            rows.append({"vote_threshold": threshold, **row})
+    return rows

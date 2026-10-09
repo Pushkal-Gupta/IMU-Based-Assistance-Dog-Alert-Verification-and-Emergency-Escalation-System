@@ -1,0 +1,13 @@
+collar core tests -- 64 golden windows from the real dataset
+
+geometry
+feature extraction vs ml/canine_alert/features.py
+  worst relative error 2.99e-03 (window 49, feature 87)
+forest inference vs scikit-learn
+  worst end-to-end probability difference 1.79e-07
+verification gate vs ml/canine_alert/verification.py
+sample ring
+degenerate inputs
+
+240 checks, 0 failures
+PASS

@@ -1,0 +1,1550 @@
+{
+  "baselines": {
+    "random_forest_embedded": {
+      "segment_f1": 0.6487341772151899,
+      "segment_auc": 0.9000444538469984,
+      "segment_auc_ci": {
+        "estimate": 0.9000444538469984,
+        "low": 0.8289750195159301,
+        "high": 0.9459095072372972,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8798076923076923,
+      "event_f1": 0.8602150537634409
+    },
+    "hist_gradient_boosting": {
+      "segment_f1": 0.6628352490421456,
+      "segment_auc": 0.8933161230889533,
+      "segment_auc_ci": {
+        "estimate": 0.8933161230889533,
+        "low": 0.8290888544195666,
+        "high": 0.937475121817218,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8208955223880597,
+      "event_specificity": 0.9182692307692307,
+      "event_f1": 0.842911877394636
+    },
+    "rocket_2000": {
+      "segment_f1": 0.6123128119800333,
+      "segment_auc": 0.8901588287750287,
+      "segment_auc_ci": {
+        "estimate": 0.8901588287750287,
+        "low": 0.8256348670408626,
+        "high": 0.934102587547635,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8731343283582089,
+      "event_specificity": 0.8557692307692307,
+      "event_f1": 0.8327402135231317
+    },
+    "cnn_1d": {
+      "segment_f1": 0.5730994152046783,
+      "segment_auc": 0.8686415600622354,
+      "segment_auc_ci": {
+        "estimate": 0.8686415600622354,
+        "low": 0.7841074482251995,
+        "high": 0.9326989701972895,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8208955223880597,
+      "event_specificity": 0.7644230769230769,
+      "event_f1": 0.7508532423208191
+    }
+  },
+  "cnn_parameters": 24417,
+  "feature_families": {
+    "all_159 (159 features)": {
+      "segment_f1": 0.6487341772151899,
+      "segment_auc": 0.9000444538469984,
+      "segment_auc_ci": {
+        "estimate": 0.9000444538469984,
+        "low": 0.8289750195159301,
+        "high": 0.9459095072372972,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8798076923076923,
+      "event_f1": 0.8602150537634409,
+      "n_features": 159
+    },
+    "magnitudes_only (36 features)": {
+      "segment_f1": 0.6896551724137931,
+      "segment_auc": 0.9011022411701538,
+      "segment_auc_ci": {
+        "estimate": 0.9011022411701538,
+        "low": 0.8250790560678359,
+        "high": 0.9510654248563428,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8656716417910447,
+      "event_specificity": 0.8894230769230769,
+      "event_f1": 0.8498168498168498,
+      "n_features": 36
+    },
+    "per_axis_only (123 features)": {
+      "segment_f1": 0.6447368421052632,
+      "segment_auc": 0.8915125287544086,
+      "segment_auc_ci": {
+        "estimate": 0.8915125287544086,
+        "low": 0.8166976407802002,
+        "high": 0.9394978038014069,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.9038461538461539,
+      "event_f1": 0.8759124087591241,
+      "n_features": 123
+    },
+    "gyro_only (75 features)": {
+      "segment_f1": 0.6677908937605397,
+      "segment_auc": 0.8922087938278779,
+      "segment_auc_ci": {
+        "estimate": 0.8922087938278779,
+        "low": 0.8131686108035416,
+        "high": 0.9429316533736569,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8990384615384616,
+      "event_f1": 0.8727272727272727,
+      "n_features": 75
+    },
+    "accel_only (75 features)": {
+      "segment_f1": 0.5351681957186545,
+      "segment_auc": 0.8519017409304779,
+      "segment_auc_ci": {
+        "estimate": 0.8519017409304779,
+        "low": 0.7752395573251948,
+        "high": 0.9108047577519391,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8805970149253731,
+      "event_specificity": 0.8173076923076923,
+      "event_f1": 0.8137931034482758,
+      "n_features": 75
+    },
+    "gyro_magnitude_only (18 features)": {
+      "segment_f1": 0.7086882453151618,
+      "segment_auc": 0.9063041446517469,
+      "segment_auc_ci": {
+        "estimate": 0.9063041446517469,
+        "low": 0.8381949723493715,
+        "high": 0.9508341121062095,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8731343283582089,
+      "event_specificity": 0.8990384615384616,
+      "event_f1": 0.8602941176470589,
+      "n_features": 18
+    }
+  },
+  "n_selected": {
+    "k=5": {
+      "segment_f1": 0.6383647798742138,
+      "segment_auc": 0.8833514987105706,
+      "segment_auc_ci": {
+        "estimate": 0.8833514987105706,
+        "low": 0.801845096235848,
+        "high": 0.9360049689231735,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.8653846153846154,
+      "event_f1": 0.8469750889679716
+    },
+    "k=10": {
+      "segment_f1": 0.6535947712418301,
+      "segment_auc": 0.8908376872216613,
+      "segment_auc_ci": {
+        "estimate": 0.8908376872216613,
+        "low": 0.8072338310701355,
+        "high": 0.944099524421968,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8805970149253731,
+      "event_specificity": 0.8942307692307693,
+      "event_f1": 0.8613138686131386
+    },
+    "k=20": {
+      "segment_f1": 0.6487341772151899,
+      "segment_auc": 0.9000444538469984,
+      "segment_auc_ci": {
+        "estimate": 0.9000444538469984,
+        "low": 0.8289750195159301,
+        "high": 0.9459095072372972,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8798076923076923,
+      "event_f1": 0.8602150537634409
+    },
+    "k=40": {
+      "segment_f1": 0.6836734693877551,
+      "segment_auc": 0.9008813109064567,
+      "segment_auc_ci": {
+        "estimate": 0.9008813109064567,
+        "low": 0.82085512701262,
+        "high": 0.9544172338786895,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.9086538461538461,
+      "event_f1": 0.875
+    },
+    "k=80": {
+      "segment_f1": 0.6950354609929078,
+      "segment_auc": 0.9061314173546747,
+      "segment_auc_ci": {
+        "estimate": 0.9061314173546747,
+        "low": 0.824762968872683,
+        "high": 0.9582603144304387,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8507462686567164,
+      "event_specificity": 0.9278846153846154,
+      "event_f1": 0.8669201520912547
+    }
+  },
+  "window_seconds": {
+    "1.6": {
+      "segment_f1": 0.6792058516196448,
+      "segment_auc": 0.9058200210205888,
+      "segment_auc_ci": {
+        "estimate": 0.9058200210205888,
+        "low": 0.8332116469249546,
+        "high": 0.9501579951837964,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8888888888888888,
+      "event_specificity": 0.8394736842105263,
+      "event_f1": 0.759493670886076
+    },
+    "2.1": {
+      "segment_f1": 0.7239101717305152,
+      "segment_auc": 0.9099191035547084,
+      "segment_auc_ci": {
+        "estimate": 0.9099191035547084,
+        "low": 0.8308860132321653,
+        "high": 0.9581340912208453,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8962962962962963,
+      "event_specificity": 0.8819188191881919,
+      "event_f1": 0.8402777777777778
+    },
+    "2.6": {
+      "segment_f1": 0.6487341772151899,
+      "segment_auc": 0.9000444538469984,
+      "segment_auc_ci": {
+        "estimate": 0.9000444538469984,
+        "low": 0.8289750195159301,
+        "high": 0.9459095072372972,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8798076923076923,
+      "event_f1": 0.8602150537634409
+    },
+    "3.1": {
+      "segment_f1": 0.6286836935166994,
+      "segment_auc": 0.885023772093895,
+      "segment_auc_ci": {
+        "estimate": 0.885023772093895,
+        "low": 0.7914064225932483,
+        "high": 0.9425786044811556,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8863636363636364,
+      "event_specificity": 0.9074074074074074,
+      "event_f1": 0.8863636363636364
+    },
+    "3.6": {
+      "segment_f1": 0.5861182519280206,
+      "segment_auc": 0.8738941594544698,
+      "segment_auc_ci": {
+        "estimate": 0.8738941594544698,
+        "low": 0.7658500572805561,
+        "high": 0.9416236518502701,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8110236220472441,
+      "event_specificity": 0.9393939393939394,
+      "event_f1": 0.865546218487395
+    }
+  },
+  "embedded_front": [
+    {
+      "n_trees": 4,
+      "max_depth": 4,
+      "flash_bytes": 1380,
+      "n_nodes": 98,
+      "fits_int16_export": true,
+      "segment_f1": 0.6094674556213018,
+      "segment_auc": 0.8839326122526585,
+      "segment_auc_ci": {
+        "estimate": 0.8839326122526585,
+        "low": 0.8140071299742554,
+        "high": 0.9290675348700344,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8461538461538461,
+      "event_f1": 0.8391608391608392
+    },
+    {
+      "n_trees": 4,
+      "max_depth": 6,
+      "flash_bytes": 3424,
+      "n_nodes": 244,
+      "fits_int16_export": true,
+      "segment_f1": 0.6170542635658914,
+      "segment_auc": 0.8855407167781137,
+      "segment_auc_ci": {
+        "estimate": 0.8855407167781137,
+        "low": 0.8160123788352236,
+        "high": 0.9312804349135971,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8509615384615384,
+      "event_f1": 0.8421052631578947
+    },
+    {
+      "n_trees": 4,
+      "max_depth": 8,
+      "flash_bytes": 5468,
+      "n_nodes": 390,
+      "fits_int16_export": true,
+      "segment_f1": 0.6284779050736498,
+      "segment_auc": 0.8840397299562692,
+      "segment_auc_ci": {
+        "estimate": 0.8840397299562692,
+        "low": 0.8110947173998196,
+        "high": 0.9308095059157798,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.875,
+      "event_f1": 0.8530465949820788
+    },
+    {
+      "n_trees": 4,
+      "max_depth": 10,
+      "flash_bytes": 6280,
+      "n_nodes": 448,
+      "fits_int16_export": true,
+      "segment_f1": 0.6137566137566137,
+      "segment_auc": 0.8763861700332868,
+      "segment_auc_ci": {
+        "estimate": 0.8763861700332868,
+        "low": 0.8068406667941941,
+        "high": 0.920903548107336,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.8798076923076923,
+      "event_f1": 0.8561151079136691
+    },
+    {
+      "n_trees": 4,
+      "max_depth": 12,
+      "flash_bytes": 7316,
+      "n_nodes": 522,
+      "fits_int16_export": true,
+      "segment_f1": 0.6345811051693404,
+      "segment_auc": 0.8784173894880042,
+      "segment_auc_ci": {
+        "estimate": 0.8784173894880042,
+        "low": 0.8082442817713211,
+        "high": 0.9234581223013896,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8507462686567164,
+      "event_specificity": 0.8894230769230769,
+      "event_f1": 0.8413284132841329
+    },
+    {
+      "n_trees": 8,
+      "max_depth": 4,
+      "flash_bytes": 2872,
+      "n_nodes": 204,
+      "fits_int16_export": true,
+      "segment_f1": 0.616519174041298,
+      "segment_auc": 0.8862610833348955,
+      "segment_auc_ci": {
+        "estimate": 0.8862610833348955,
+        "low": 0.8135296883952308,
+        "high": 0.9352568227805967,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.9029850746268657,
+      "event_specificity": 0.8461538461538461,
+      "event_f1": 0.8432055749128919
+    },
+    {
+      "n_trees": 8,
+      "max_depth": 6,
+      "flash_bytes": 7184,
+      "n_nodes": 512,
+      "fits_int16_export": true,
+      "segment_f1": 0.6339969372128637,
+      "segment_auc": 0.8936669335682782,
+      "segment_auc_ci": {
+        "estimate": 0.8936669335682782,
+        "low": 0.8244749153648706,
+        "high": 0.938921712344589,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.8653846153846154,
+      "event_f1": 0.8469750889679716
+    },
+    {
+      "n_trees": 8,
+      "max_depth": 8,
+      "flash_bytes": 10628,
+      "n_nodes": 758,
+      "fits_int16_export": true,
+      "segment_f1": 0.6452648475120385,
+      "segment_auc": 0.893554459979487,
+      "segment_auc_ci": {
+        "estimate": 0.893554459979487,
+        "low": 0.8211364404414608,
+        "high": 0.940203164197088,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8846153846153846,
+      "event_f1": 0.8633093525179856
+    },
+    {
+      "n_trees": 8,
+      "max_depth": 10,
+      "flash_bytes": 12756,
+      "n_nodes": 910,
+      "fits_int16_export": true,
+      "segment_f1": 0.6308724832214765,
+      "segment_auc": 0.8875746141754213,
+      "segment_auc_ci": {
+        "estimate": 0.8875746141754213,
+        "low": 0.8195641207273675,
+        "high": 0.9315383304628865,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.8653846153846154,
+      "event_f1": 0.8469750889679716
+    },
+    {
+      "n_trees": 8,
+      "max_depth": 12,
+      "flash_bytes": 14520,
+      "n_nodes": 1036,
+      "fits_int16_export": true,
+      "segment_f1": 0.6518010291595198,
+      "segment_auc": 0.8880727114972109,
+      "segment_auc_ci": {
+        "estimate": 0.8880727114972109,
+        "low": 0.8188182000137735,
+        "high": 0.9324123728829147,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8805970149253731,
+      "event_specificity": 0.8894230769230769,
+      "event_f1": 0.8581818181818182
+    },
+    {
+      "n_trees": 16,
+      "max_depth": 4,
+      "flash_bytes": 5968,
+      "n_nodes": 424,
+      "fits_int16_export": true,
+      "segment_f1": 0.6389301634472511,
+      "segment_auc": 0.8881249313777211,
+      "segment_auc_ci": {
+        "estimate": 0.8881249313777211,
+        "low": 0.8143716159761254,
+        "high": 0.9375964952508696,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8557692307692307,
+      "event_f1": 0.8450704225352113
+    },
+    {
+      "n_trees": 16,
+      "max_depth": 6,
+      "flash_bytes": 14228,
+      "n_nodes": 1014,
+      "fits_int16_export": true,
+      "segment_f1": 0.6288343558282209,
+      "segment_auc": 0.8936120357451777,
+      "segment_auc_ci": {
+        "estimate": 0.8936120357451777,
+        "low": 0.8220676452145484,
+        "high": 0.9385095736979804,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.8509615384615384,
+      "event_f1": 0.8380281690140845
+    },
+    {
+      "n_trees": 16,
+      "max_depth": 8,
+      "flash_bytes": 21368,
+      "n_nodes": 1524,
+      "fits_int16_export": true,
+      "segment_f1": 0.6411483253588517,
+      "segment_auc": 0.8983827904697379,
+      "segment_auc_ci": {
+        "estimate": 0.8983827904697379,
+        "low": 0.8263015936032347,
+        "high": 0.9442335856344051,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.8701923076923077,
+      "event_f1": 0.85
+    },
+    {
+      "n_trees": 16,
+      "max_depth": 10,
+      "flash_bytes": 26184,
+      "n_nodes": 1868,
+      "fits_int16_export": true,
+      "segment_f1": 0.6498316498316499,
+      "segment_auc": 0.8953071734048166,
+      "segment_auc_ci": {
+        "estimate": 0.8953071734048166,
+        "low": 0.8230413356124373,
+        "high": 0.9409421901175147,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.8846153846153846,
+      "event_f1": 0.8592057761732852
+    },
+    {
+      "n_trees": 16,
+      "max_depth": 12,
+      "flash_bytes": 30076,
+      "n_nodes": 2146,
+      "fits_int16_export": true,
+      "segment_f1": 0.6575342465753424,
+      "segment_auc": 0.8959164053441022,
+      "segment_auc_ci": {
+        "estimate": 0.8959164053441022,
+        "low": 0.8239286115346627,
+        "high": 0.9411128771639514,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.9086538461538461,
+      "event_f1": 0.875
+    },
+    {
+      "n_trees": 32,
+      "max_depth": 4,
+      "flash_bytes": 12076,
+      "n_nodes": 858,
+      "fits_int16_export": true,
+      "segment_f1": 0.6339285714285714,
+      "segment_auc": 0.8887368412595971,
+      "segment_auc_ci": {
+        "estimate": 0.8887368412595971,
+        "low": 0.8148150456248545,
+        "high": 0.9389217560057781,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8557692307692307,
+      "event_f1": 0.8450704225352113
+    },
+    {
+      "n_trees": 32,
+      "max_depth": 6,
+      "flash_bytes": 27980,
+      "n_nodes": 1994,
+      "fits_int16_export": true,
+      "segment_f1": 0.6317411402157165,
+      "segment_auc": 0.8951197174234978,
+      "segment_auc_ci": {
+        "estimate": 0.8951197174234978,
+        "low": 0.8238230520038179,
+        "high": 0.9402908202201726,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8605769230769231,
+      "event_f1": 0.8480565371024735
+    },
+    {
+      "n_trees": 32,
+      "max_depth": 8,
+      "flash_bytes": 40384,
+      "n_nodes": 2880,
+      "fits_int16_export": true,
+      "segment_f1": 0.6487341772151899,
+      "segment_auc": 0.9000444538469984,
+      "segment_auc_ci": {
+        "estimate": 0.9000444538469984,
+        "low": 0.8289750195159301,
+        "high": 0.9459095072372972,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8798076923076923,
+      "event_f1": 0.8602150537634409
+    },
+    {
+      "n_trees": 32,
+      "max_depth": 10,
+      "flash_bytes": 51192,
+      "n_nodes": 3652,
+      "fits_int16_export": true,
+      "segment_f1": 0.6533996683250415,
+      "segment_auc": 0.898364044871606,
+      "segment_auc_ci": {
+        "estimate": 0.898364044871606,
+        "low": 0.8235596050709656,
+        "high": 0.9434101058977105,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8798076923076923,
+      "event_f1": 0.8602150537634409
+    },
+    {
+      "n_trees": 32,
+      "max_depth": 12,
+      "flash_bytes": 58864,
+      "n_nodes": 4200,
+      "fits_int16_export": true,
+      "segment_f1": 0.6577181208053692,
+      "segment_auc": 0.9008398027963076,
+      "segment_auc_ci": {
+        "estimate": 0.9008398027963076,
+        "low": 0.8283733622109295,
+        "high": 0.9462839159532761,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.9038461538461539,
+      "event_f1": 0.8759124087591241
+    },
+    {
+      "n_trees": 64,
+      "max_depth": 4,
+      "flash_bytes": 23900,
+      "n_nodes": 1698,
+      "fits_int16_export": true,
+      "segment_f1": 0.6350148367952523,
+      "segment_auc": 0.8873871581941026,
+      "segment_auc_ci": {
+        "estimate": 0.8873871581941026,
+        "low": 0.8124556323630258,
+        "high": 0.9374694029568152,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8605769230769231,
+      "event_f1": 0.8480565371024735
+    },
+    {
+      "n_trees": 64,
+      "max_depth": 6,
+      "flash_bytes": 54252,
+      "n_nodes": 3866,
+      "fits_int16_export": true,
+      "segment_f1": 0.6440677966101694,
+      "segment_auc": 0.8948238047672734,
+      "segment_auc_ci": {
+        "estimate": 0.8948238047672734,
+        "low": 0.8225383544736317,
+        "high": 0.9408298050931427,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8653846153846154,
+      "event_f1": 0.851063829787234
+    },
+    {
+      "n_trees": 64,
+      "max_depth": 8,
+      "flash_bytes": 80796,
+      "n_nodes": 5762,
+      "fits_int16_export": true,
+      "segment_f1": 0.6435331230283912,
+      "segment_auc": 0.898433671378953,
+      "segment_auc_ci": {
+        "estimate": 0.898433671378953,
+        "low": 0.8247469468994846,
+        "high": 0.945242676510773,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8701923076923077,
+      "event_f1": 0.8540925266903915
+    },
+    {
+      "n_trees": 64,
+      "max_depth": 10,
+      "flash_bytes": 100984,
+      "n_nodes": 7204,
+      "fits_int16_export": true,
+      "segment_f1": 0.6525285481239804,
+      "segment_auc": 0.898163199177336,
+      "segment_auc_ci": {
+        "estimate": 0.898163199177336,
+        "low": 0.8222753654730789,
+        "high": 0.9450080579771658,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.875,
+      "event_f1": 0.8530465949820788
+    },
+    {
+      "n_trees": 64,
+      "max_depth": 12,
+      "flash_bytes": 117756,
+      "n_nodes": 8402,
+      "fits_int16_export": true,
+      "segment_f1": 0.6510851419031719,
+      "segment_auc": 0.8991285974811272,
+      "segment_auc_ci": {
+        "estimate": 0.8991285974811272,
+        "low": 0.8238235901913195,
+        "high": 0.9458084385319975,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8880597014925373,
+      "event_specificity": 0.8894230769230769,
+      "event_f1": 0.8623188405797102
+    },
+    {
+      "n_trees": 128,
+      "max_depth": 4,
+      "flash_bytes": 47912,
+      "n_nodes": 3404,
+      "fits_int16_export": true,
+      "segment_f1": 0.6379821958456974,
+      "segment_auc": 0.886848891733459,
+      "segment_auc_ci": {
+        "estimate": 0.886848891733459,
+        "low": 0.8115185514920548,
+        "high": 0.937574180260224,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8557692307692307,
+      "event_f1": 0.8450704225352113
+    },
+    {
+      "n_trees": 128,
+      "max_depth": 6,
+      "flash_bytes": 108588,
+      "n_nodes": 7738,
+      "fits_int16_export": true,
+      "segment_f1": 0.6367851622874807,
+      "segment_auc": 0.8927082301209627,
+      "segment_auc_ci": {
+        "estimate": 0.8927082301209627,
+        "low": 0.8179006222802254,
+        "high": 0.9410630155948236,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8701923076923077,
+      "event_f1": 0.8540925266903915
+    },
+    {
+      "n_trees": 128,
+      "max_depth": 8,
+      "flash_bytes": 160976,
+      "n_nodes": 11480,
+      "fits_int16_export": true,
+      "segment_f1": 0.6487341772151899,
+      "segment_auc": 0.8975124591279012,
+      "segment_auc_ci": {
+        "estimate": 0.8975124591279012,
+        "low": 0.8218276114830744,
+        "high": 0.9450423868526934,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.8701923076923077,
+      "event_f1": 0.8540925266903915
+    },
+    {
+      "n_trees": 128,
+      "max_depth": 10,
+      "flash_bytes": 203648,
+      "n_nodes": 14528,
+      "fits_int16_export": true,
+      "segment_f1": 0.6601626016260163,
+      "segment_auc": 0.8991393092514882,
+      "segment_auc_ci": {
+        "estimate": 0.8991393092514882,
+        "low": 0.8232441523496196,
+        "high": 0.9468603558563256,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8955223880597015,
+      "event_specificity": 0.875,
+      "event_f1": 0.8571428571428571
+    },
+    {
+      "n_trees": 128,
+      "max_depth": 12,
+      "flash_bytes": 233776,
+      "n_nodes": 16680,
+      "fits_int16_export": true,
+      "segment_f1": 0.6499162479061976,
+      "segment_auc": 0.9002774348523517,
+      "segment_auc_ci": {
+        "estimate": 0.9002774348523517,
+        "low": 0.8247621631862657,
+        "high": 0.9471293169331868,
+        "level": 0.95,
+        "method": "cluster percentile bootstrap"
+      },
+      "event_recall": 0.8805970149253731,
+      "event_specificity": 0.9038461538461539,
+      "event_f1": 0.8676470588235294
+    }
+  ],
+  "robustness": {
+    "clean_training": {
+      "clean": {
+        "segment_f1": 0.6487341772151899,
+        "segment_auc": 0.9000444538469984,
+        "segment_auc_ci": {
+          "estimate": 0.9000444538469984,
+          "low": 0.8289750195159301,
+          "high": 0.9459095072372972,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8602150537634409
+      },
+      "rot_x_30deg": {
+        "segment_f1": 0.622895622895623,
+        "segment_auc": 0.8940230999327836,
+        "segment_auc_ci": {
+          "estimate": 0.8940230999327836,
+          "low": 0.8283210646530262,
+          "high": 0.9394089692920865,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8582089552238806,
+        "event_specificity": 0.8846153846153846,
+        "event_f1": 0.8424908424908425
+      },
+      "rot_x_90deg": {
+        "segment_f1": 0.48735632183908045,
+        "segment_auc": 0.8804419140862458,
+        "segment_auc_ci": {
+          "estimate": 0.8804419140862458,
+          "low": 0.8058432683135736,
+          "high": 0.9260312096976343,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.6343283582089553,
+        "event_specificity": 0.9471153846153846,
+        "event_f1": 0.7391304347826086
+      },
+      "rot_x_180deg": {
+        "segment_f1": 0.65814696485623,
+        "segment_auc": 0.892309216675013,
+        "segment_auc_ci": {
+          "estimate": 0.892309216675013,
+          "low": 0.8156524911884623,
+          "high": 0.9413529336720897,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8942307692307693,
+        "event_f1": 0.8695652173913043
+      },
+      "rot_y_30deg": {
+        "segment_f1": 0.6571879936808847,
+        "segment_auc": 0.9035324740708208,
+        "segment_auc_ci": {
+          "estimate": 0.9035324740708208,
+          "low": 0.83419869362129,
+          "high": 0.9469497606956886,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.875,
+        "event_f1": 0.8571428571428571
+      },
+      "rot_y_90deg": {
+        "segment_f1": 0.643312101910828,
+        "segment_auc": 0.9007152784658603,
+        "segment_auc_ci": {
+          "estimate": 0.9007152784658603,
+          "low": 0.8223687147585822,
+          "high": 0.9488064891236863,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8602150537634409
+      },
+      "rot_y_180deg": {
+        "segment_f1": 0.65814696485623,
+        "segment_auc": 0.892309216675013,
+        "segment_auc_ci": {
+          "estimate": 0.892309216675013,
+          "low": 0.8156524911884623,
+          "high": 0.9413529336720897,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8942307692307693,
+        "event_f1": 0.8695652173913043
+      },
+      "rot_z_30deg": {
+        "segment_f1": 0.5996275605214153,
+        "segment_auc": 0.8921766585167947,
+        "segment_auc_ci": {
+          "estimate": 0.8921766585167947,
+          "low": 0.8235530804759316,
+          "high": 0.9380018449961461,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.746268656716418,
+        "event_specificity": 0.9230769230769231,
+        "event_f1": 0.8
+      },
+      "rot_z_90deg": {
+        "segment_f1": 0.5168539325842697,
+        "segment_auc": 0.8684795445355242,
+        "segment_auc_ci": {
+          "estimate": 0.8684795445355242,
+          "low": 0.7864834728585098,
+          "high": 0.9251315627635716,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.7686567164179104,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.7862595419847328
+      },
+      "rot_z_180deg": {
+        "segment_f1": 0.6487341772151899,
+        "segment_auc": 0.9000444538469984,
+        "segment_auc_ci": {
+          "estimate": 0.9000444538469984,
+          "low": 0.8289750195159301,
+          "high": 0.9459095072372972,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8602150537634409
+      },
+      "rot_random_so3": {
+        "segment_f1": 0.4951644100580271,
+        "segment_auc": 0.8746455073496134,
+        "segment_auc_ci": {
+          "estimate": 0.8746455073496134,
+          "low": 0.7969914412948979,
+          "high": 0.9302790547718454,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8134328358208955,
+        "event_specificity": 0.8846153846153846,
+        "event_f1": 0.8164794007490637
+      },
+      "mpu6050_datasheet": {
+        "segment_f1": 0.6518282988871225,
+        "segment_auc": 0.9008987175332935,
+        "segment_auc_ci": {
+          "estimate": 0.9008987175332935,
+          "low": 0.8306119231665056,
+          "high": 0.9466205840444208,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8602150537634409
+      },
+      "mpu6050_noise_x10": {
+        "segment_f1": 0.6464968152866242,
+        "segment_auc": 0.8998074559277598,
+        "segment_auc_ci": {
+          "estimate": 0.8998074559277598,
+          "low": 0.8286754262856599,
+          "high": 0.9455846104267132,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8846153846153846,
+        "event_f1": 0.8633093525179856
+      },
+      "mpu6050_bias_only": {
+        "segment_f1": 0.6477093206951027,
+        "segment_auc": 0.899326765232807,
+        "segment_auc_ci": {
+          "estimate": 0.899326765232807,
+          "low": 0.8284789879264601,
+          "high": 0.9455137237230171,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8653846153846154,
+        "event_f1": 0.851063829787234
+      },
+      "mpu6050_gain_only": {
+        "segment_f1": 0.6497622820919176,
+        "segment_auc": 0.9015561524392041,
+        "segment_auc_ci": {
+          "estimate": 0.9015561524392041,
+          "low": 0.8323004444793337,
+          "high": 0.9458731997841038,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8602150537634409
+      },
+      "gyro_full_scale_250dps": {
+        "segment_f1": 0.5690376569037657,
+        "segment_auc": 0.8919409995688512,
+        "segment_auc_ci": {
+          "estimate": 0.8919409995688512,
+          "low": 0.8198204518257273,
+          "high": 0.9380439723624141,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8134328358208955,
+        "event_specificity": 0.9326923076923077,
+        "event_f1": 0.8482490272373541
+      },
+      "gyro_full_scale_1000dps": {
+        "segment_f1": 0.6487341772151899,
+        "segment_auc": 0.9000444538469984,
+        "segment_auc_ci": {
+          "estimate": 0.9000444538469984,
+          "low": 0.8289750195159301,
+          "high": 0.9459095072372972,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8602150537634409
+      },
+      "jitter_2ms": {
+        "segment_f1": 0.6475279106858054,
+        "segment_auc": 0.9011919522469277,
+        "segment_auc_ci": {
+          "estimate": 0.9011919522469277,
+          "low": 0.8318764123691057,
+          "high": 0.9454358333221462,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8602150537634409
+      },
+      "jitter_5ms": {
+        "segment_f1": 0.6483870967741936,
+        "segment_auc": 0.9007581255473045,
+        "segment_auc_ci": {
+          "estimate": 0.9007581255473045,
+          "low": 0.8338492815684727,
+          "high": 0.9438666355264077,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8664259927797834
+      },
+      "rate_50hz": {
+        "segment_f1": 0.6525285481239804,
+        "segment_auc": 0.9024693308624849,
+        "segment_auc_ci": {
+          "estimate": 0.9024693308624849,
+          "low": 0.8355548037115123,
+          "high": 0.9438625831593411,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8990384615384616,
+        "event_f1": 0.8727272727272727
+      },
+      "rate_45hz": {
+        "segment_f1": 0.6534653465346535,
+        "segment_auc": 0.9002747569097613,
+        "segment_auc_ci": {
+          "estimate": 0.9002747569097613,
+          "low": 0.8296913754752324,
+          "high": 0.9466825720053387,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8805970149253731,
+        "event_specificity": 0.8942307692307693,
+        "event_f1": 0.8613138686131386
+      },
+      "rate_60hz": {
+        "segment_f1": 0.6521739130434783,
+        "segment_auc": 0.8944033677806015,
+        "segment_auc_ci": {
+          "estimate": 0.8944033677806015,
+          "low": 0.8254608626269608,
+          "high": 0.9426614456524018,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8664259927797834
+      }
+    },
+    "augmented": {
+      "clean": {
+        "segment_f1": 0.6337817638266069,
+        "segment_auc": 0.8928756015328544,
+        "segment_auc_ci": {
+          "estimate": 0.8928756015328544,
+          "low": 0.8193898669991931,
+          "high": 0.9430033506901373,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8461538461538461,
+        "event_f1": 0.8391608391608392
+      },
+      "rot_x_30deg": {
+        "segment_f1": 0.6287425149700598,
+        "segment_auc": 0.8917321200468105,
+        "segment_auc_ci": {
+          "estimate": 0.8917321200468105,
+          "low": 0.8172723034049667,
+          "high": 0.9433306113095818,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8509615384615384,
+        "event_f1": 0.8421052631578947
+      },
+      "rot_x_90deg": {
+        "segment_f1": 0.6229508196721312,
+        "segment_auc": 0.8887314853744166,
+        "segment_auc_ci": {
+          "estimate": 0.8887314853744166,
+          "low": 0.8172453802117998,
+          "high": 0.9390844074036814,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8413461538461539,
+        "event_f1": 0.8362369337979094
+      },
+      "rot_x_180deg": {
+        "segment_f1": 0.6337817638266069,
+        "segment_auc": 0.8928756015328544,
+        "segment_auc_ci": {
+          "estimate": 0.8928756015328544,
+          "low": 0.8193898669991931,
+          "high": 0.9430033506901373,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8461538461538461,
+        "event_f1": 0.8391608391608392
+      },
+      "rot_y_30deg": {
+        "segment_f1": 0.6298507462686567,
+        "segment_auc": 0.8945747561063786,
+        "segment_auc_ci": {
+          "estimate": 0.8945747561063786,
+          "low": 0.8225241716422932,
+          "high": 0.9435652402057633,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8269230769230769,
+        "event_f1": 0.8275862068965517
+      },
+      "rot_y_90deg": {
+        "segment_f1": 0.6326836581709145,
+        "segment_auc": 0.8924457917471166,
+        "segment_auc_ci": {
+          "estimate": 0.8924457917471166,
+          "low": 0.8160387874563862,
+          "high": 0.9425251390620902,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8461538461538461,
+        "event_f1": 0.8391608391608392
+      },
+      "rot_y_180deg": {
+        "segment_f1": 0.6337817638266069,
+        "segment_auc": 0.8928756015328544,
+        "segment_auc_ci": {
+          "estimate": 0.8928756015328544,
+          "low": 0.8193898669991931,
+          "high": 0.9430033506901373,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8461538461538461,
+        "event_f1": 0.8391608391608392
+      },
+      "rot_z_30deg": {
+        "segment_f1": 0.625,
+        "segment_auc": 0.8917120354773834,
+        "segment_auc_ci": {
+          "estimate": 0.8917120354773834,
+          "low": 0.8205818522087462,
+          "high": 0.9413285212998986,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8317307692307693,
+        "event_f1": 0.8304498269896193
+      },
+      "rot_z_90deg": {
+        "segment_f1": 0.6307922272047832,
+        "segment_auc": 0.8949469901264256,
+        "segment_auc_ci": {
+          "estimate": 0.8949469901264256,
+          "low": 0.8215887435402122,
+          "high": 0.9467887255975247,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8413461538461539,
+        "event_f1": 0.8362369337979094
+      },
+      "rot_z_180deg": {
+        "segment_f1": 0.6337817638266069,
+        "segment_auc": 0.8928756015328544,
+        "segment_auc_ci": {
+          "estimate": 0.8928756015328544,
+          "low": 0.8193898669991931,
+          "high": 0.9430033506901373,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8461538461538461,
+        "event_f1": 0.8391608391608392
+      },
+      "rot_random_so3": {
+        "segment_f1": 0.6325301204819277,
+        "segment_auc": 0.8908604497336786,
+        "segment_auc_ci": {
+          "estimate": 0.8908604497336786,
+          "low": 0.8147581345524905,
+          "high": 0.9436977187406199,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8509615384615384,
+        "event_f1": 0.8421052631578947
+      },
+      "mpu6050_datasheet": {
+        "segment_f1": 0.6251851851851852,
+        "segment_auc": 0.8927483992598166,
+        "segment_auc_ci": {
+          "estimate": 0.8927483992598166,
+          "low": 0.8194864201881221,
+          "high": 0.9438370543321968,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8955223880597015,
+        "event_specificity": 0.8269230769230769,
+        "event_f1": 0.8275862068965517
+      }
+    },
+    "magnitudes_only": {
+      "clean": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_x_30deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_x_90deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_x_180deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_y_30deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_y_90deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_y_180deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_z_30deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_z_90deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_z_180deg": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "rot_random_so3": {
+        "segment_f1": 0.6896551724137931,
+        "segment_auc": 0.9011022411701538,
+        "segment_auc_ci": {
+          "estimate": 0.9011022411701538,
+          "low": 0.8250790560678359,
+          "high": 0.9510654248563428,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8894230769230769,
+        "event_f1": 0.8498168498168498
+      },
+      "mpu6050_datasheet": {
+        "segment_f1": 0.6825938566552902,
+        "segment_auc": 0.9021332490674064,
+        "segment_auc_ci": {
+          "estimate": 0.9021332490674064,
+          "low": 0.825160742686402,
+          "high": 0.9525308227655241,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8436363636363636
+      },
+      "jitter_5ms": {
+        "segment_f1": 0.6848381601362862,
+        "segment_auc": 0.9018534040667237,
+        "segment_auc_ci": {
+          "estimate": 0.9018534040667237,
+          "low": 0.8279595583602845,
+          "high": 0.9524712971876708,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8656716417910447,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8436363636363636
+      },
+      "rate_50hz": {
+        "segment_f1": 0.6655405405405406,
+        "segment_auc": 0.8986813810685527,
+        "segment_auc_ci": {
+          "estimate": 0.8986813810685527,
+          "low": 0.8208703269891572,
+          "high": 0.9496127081871625,
+          "level": 0.95,
+          "method": "cluster percentile bootstrap"
+        },
+        "event_recall": 0.8507462686567164,
+        "event_specificity": 0.8798076923076923,
+        "event_f1": 0.8351648351648352
+      }
+    }
+  },
+  "runtime_seconds": 505.9
+}

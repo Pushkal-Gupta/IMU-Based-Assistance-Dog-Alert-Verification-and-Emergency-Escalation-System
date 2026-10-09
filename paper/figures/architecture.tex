@@ -1,0 +1,38 @@
+% System architecture: three nodes and what each one owns.
+\begin{tikzpicture}[
+    font=\footnotesize,
+    node/.style={draw=black!70, rounded corners=2pt, fill=black!3, align=left,
+                 minimum height=3.2cm, text width=3.55cm, inner sep=5pt},
+    head/.style={font=\footnotesize\bfseries},
+    link/.style={-{Stealth[length=2mm]}, thick, black!70},
+    lab/.style={font=\scriptsize, fill=white, inner sep=1pt}]
+  \node[node] (collar) {%
+    {\bfseries Collar} (ESP32 + MPU6050)\\[2pt]
+    6-axis IMU at 51.2\,Hz\\
+    2.6\,s windows, 1.3\,s stride\\
+    159 features $\rightarrow$ 20 selected\\
+    32-tree forest (C tables)\\
+    $K$-of-$N$ verification gate\\
+    60\,s refractory period};
+  \node[node, right=1.25cm of collar] (relay) {%
+    {\bfseries Relay} (owner's phone)\\[2pt]
+    escalation engine (Python)\\
+    $T_1$: owner window\\
+    $T_2$: caregiver window\\
+    SMS / push, GPS fix\\
+    heartbeat every 15\,s\\
+    queue + replay when offline};
+  \node[node, right=1.25cm of relay] (backend) {%
+    {\bfseries Backend} (Jakarta EE)\\[2pt]
+    append-only alert log\\
+    relay watchdog ($W$\,=\,60\,s)\\
+    caregiver dashboard\\
+    longitudinal alert record\\
+    \phantom{x}\\
+    \phantom{x}};
+  \draw[link] (collar) -- node[lab, above=2pt] {BLE} node[lab, below=2pt] {alert} (relay);
+  \draw[link] (relay) -- node[lab, above=2pt] {HTTPS} node[lab, below=2pt] {state, HB} (backend);
+  \node[below=3pt of collar, font=\scriptsize\itshape] {detection};
+  \node[below=3pt of relay, font=\scriptsize\itshape] {escalation ladder};
+  \node[below=3pt of backend, font=\scriptsize\itshape] {record and fallback};
+\end{tikzpicture}

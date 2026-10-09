@@ -96,7 +96,7 @@ class ReplayResult:
 def load_model(artifact_dir: Path):
     import joblib
 
-    path = artifact_dir / "model_random_forest.joblib"
+    path = artifact_dir / "model_deployed.joblib"
     if not path.exists():
         raise FileNotFoundError(
             f"{path} not found -- run: python ml/scripts/run_experiments.py"

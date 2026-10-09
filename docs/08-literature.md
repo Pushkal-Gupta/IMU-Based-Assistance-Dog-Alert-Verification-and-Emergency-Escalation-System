@@ -1,5 +1,16 @@
 # Related work
 
+> **Errata (9 October 2026).** A DOI-level verification of every reference
+> (`paper/references_notes.md`) found errors in an earlier version of this
+> page, now corrected: R1 is in *PLoS ONE* 13(12):e0208280, not *Epilepsy &
+> Behavior*; R2's DOI pointed to an unrelated paper; R3 is the 2024 issue; R10's
+> 93% / 2.5 per 24 h figures are the wrist-worn subgroup, not the pooled
+> result; the ILAE/IFCN guideline and the validation standards attributed to
+> R12 are Beniczky et al. 2021 and Beniczky & Ryvlin 2018; R15 is a conference
+> abstract; and the "80–99%" alarm figure attributed to R16 is not in R16. The
+> R2 behaviour percentages (95% / 50% / 41%) could not be verified from the
+> abstract. For citation, `paper/references.bib` is authoritative.
+
 A survey of the five research areas this system sits between, and a precise
 statement of what is and is not new here.
 
@@ -39,8 +50,9 @@ revisits the same distinction.
 The proposed mechanism is olfactory: humans emit volatile organic compounds
 (VOCs), some of which are altered in the pre-ictal state. Brady et al.
 [[R4](#r4)] summarise this literature, citing work identifying menthone as a
-possible pre-ictal marker, canine identification of pre-clinical seizure VOCs at
-~82% accuracy, and controlled exposure of untrained pet dogs to sweat samples
+possible pre-ictal marker, canine detection of seizure-associated sweat odour
+(Maa et al. 2021: an 82.2% probability that a positive detection preceded a
+seizure, with an interval crossing chance), and controlled exposure of untrained pet dogs to sweat samples
 that produced reliable affiliative responses to pre-seizure and seizure-phase
 odours.
 
@@ -141,9 +153,10 @@ The alternative approach: skip the dog and monitor the person.
 ### 3.1 Performance
 
 A systematic review and meta-analysis of automated seizure detection with
-non-invasive wearables [[R10](#r10)] found that for **accelerometry-based
-detection of tonic-clonic seizures**, pooled sensitivity was **93% (95% CI
-85–99%)** with a false-alarm rate of **2.5 per 24 hours (95% CI 1.95–3.1)**. A
+non-invasive wearables [[R10](#r10)] found pooled sensitivity **0.91 (95% CI 0.85–0.96)** and **2.1 false alarms
+per 24 hours (1.7–2.6)** across 23 studies; for the **wrist-worn
+accelerometry subgroup**, sensitivity was **93% (85–99%)** at **2.5 per 24
+hours (1.95–3.1)**. A
 survey of non-EEG seizure detection devices [[R11](#r11)] reports sensitivities of
 **79.4–96%** with false-alarm rates of **0.20–1.92 per 24 hours**. An updated
 review [[R12](#r12)] revisits both figures. A phase-3 clinical validation of
@@ -225,10 +238,13 @@ monitoring provider rather than dialling emergency services directly.
 
 ### 4.3 Why the false-alarm rate makes the ladder necessary
 
-The clinical alarm literature quantifies the cost of getting this wrong.
-**80–99% of ECG monitor alarms are false or clinically insignificant**
-[[R16](#r16)], producing *alarm fatigue*: clinicians become desensitised, and
-missed or delayed responses follow [[R17](#r17)]. The Joint Commission set a 2021
+The clinical alarm literature quantifies the cost of getting this wrong. In
+hospital monitoring, a large majority of alarms are false or clinically
+insignificant -- a single-site quality-improvement study measured 55–85% false
+SpO₂ notifications at baseline and cites estimates above 70% [[R16](#r16)] --
+producing *alarm fatigue*: clinicians become desensitised, and missed or delayed
+responses follow [[R17](#r17)]. (An earlier version of this section quoted
+"80–99% of ECG monitor alarms"; that figure is not in R16 and has been removed.) The Joint Commission set a 2021
 target for mitigating alarm-fatigue-related fatalities.
 
 A system with our measured false-alarm rate that paged a caregiver directly would
@@ -322,19 +338,22 @@ build it.
 
 ## 7. References
 
-<a id="r1"></a>**[R1]** Dog alerting and/or responding to epileptic seizures: A
-scoping review. *Epilepsy & Behavior*, 2018.
+<a id="r1"></a>**[R1]** Catala, A.; Cousillas, H.; Hausberger, M.; Grandgeorge, M. Dog
+alerting and/or responding to epileptic seizures: A scoping review. *PLoS ONE*
+**2018**, 13(12), e0208280.
 [PMID 30513112](https://pubmed.ncbi.nlm.nih.gov/30513112/) ·
 [PMC6279040](https://pmc.ncbi.nlm.nih.gov/articles/PMC6279040/) — *abstract and
 summary only.*
 
 <a id="r2"></a>**[R2]** Seizure response dogs: Evaluation of a formal training
 program. *Epilepsy & Behavior*, 2008.
-[doi:10.1016/j.yebeh.2008.09.019](https://www.sciencedirect.com/science/article/abs/pii/S1525505008001406)
+Kirton, Winter, Wirrell, Snead; 13(3):499–504.
+[doi:10.1016/j.yebeh.2008.05.011](https://doi.org/10.1016/j.yebeh.2008.05.011)
 — *abstract only.*
 
 <a id="r3"></a>**[R3]** The role of trained and untrained dogs in the detection
-and warning of seizures. *Epilepsy & Behavior*, 2023.
+and warning of seizures. *Epilepsy & Behavior* **2024**, 150, 109563 (online
+December 2023).
 [ScienceDirect S1525505023004821](https://www.sciencedirect.com/science/article/pii/S1525505023004821)
 — *abstract only.*
 

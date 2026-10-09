@@ -1,5 +1,19 @@
 # Limitations
 
+> **Research update.** Several items below have since been addressed by the
+> analyses in `paper/` (see [11-research.md](11-research.md)):
+> - §2.3 (operating point chosen on its own data): resolved by nested
+>   cross-validation;
+> - §2.2: the false-alarm rate is now also measured on continuous recordings,
+>   where it is higher, not lower;
+> - §3 (MPU6050 vs Shimmer3): analysed by simulation, which finds that collar
+>   rotation, not sensor noise, is the dominant risk;
+> - §5 ("the ladder runs on the phone"): formally model-checked, which found
+>   a watchdog flaw and a heartbeat-id bug. The bug is fixed; the ladder-aware
+>   watchdog is specified but not yet in the Java backend.
+>
+> Everything else on this page still stands.
+
 Read this alongside the results, not after them.
 
 ---

@@ -32,3 +32,17 @@ venv/
 .DS_Store
 .idea/
 .vscode/
+
+# Research tooling
+firmware/test/bench
+firmware/test/bench_direct
+formal/tla2tools.jar
+formal/logs/
+formal/states/
+.hypothesis/
+paper/build/
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+paper/*.out

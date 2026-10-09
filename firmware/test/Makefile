@@ -38,8 +38,9 @@ all: $(BINARY)
 $(BINARY): $(SOURCES) $(HEADERS)
 	$(CC) $(CFLAGS) -o $@ $(SOURCES) $(LDFLAGS)
 
+# parity.log is kept: the paper reads the measured C/Python agreement from it.
 run: $(BINARY) $(VECTORS)
-	./$(BINARY) $(VECTORS)
+	./$(BINARY) $(VECTORS) > parity.log; status=$$?; cat parity.log; exit $$status
 
 $(VECTORS):
 	@echo "vectors.bin is missing -- generate it with:"
@@ -47,4 +48,16 @@ $(VECTORS):
 	@false
 
 clean:
-	rm -f $(BINARY)
+	rm -f $(BINARY) bench bench_direct
+
+# --- benchmark ------------------------------------------------------------ #
+BENCH_SOURCES := bench.c $(SRC_DIR)/ca_features.c $(SRC_DIR)/ca_forest.c
+
+.PHONY: bench bench-direct
+bench: $(BENCH_SOURCES) $(HEADERS)
+	$(CC) $(CFLAGS) -o bench $(BENCH_SOURCES) $(LDFLAGS)
+	./bench bench.json
+
+bench-direct: $(BENCH_SOURCES) $(HEADERS)
+	$(CC) $(CFLAGS) -DCA_DFT_DIRECT_TRIG -o bench_direct $(BENCH_SOURCES) $(LDFLAGS)
+	./bench_direct bench_direct.json

@@ -1,0 +1,40 @@
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Dogs and Seizures}
+A scoping review of dogs alerting to or responding to epileptic seizures found only 5 of 28 candidate studies eligible, owner-reported alert accuracies of roughly 70--85\%, lead times from 10\,s to 5\,h, and generally poor methodological rigour~\cite{catala2018scoping}; an earlier review concluded that no rigorous data existed on whether seizure-alert dogs predict better than chance~\cite{brown2011sad}. In a formal training programme spontaneous alerting developed in 59\% of dogs~\cite{kirton2008srd}. Controlled work supports an olfactory mechanism: trained dogs discriminated a seizure-associated odour across individuals and seizure types~\cite{catala2019odour}, and in a sweat-sample study the scent was detectable before 78.7\% of seizures~\cite{maa2021voc}; a recent review revisits trained versus untrained dogs~\cite{luff2024dogs}. The consequence for this work is that we detect \emph{the dog's trained signal}, not the seizure: if the dog is wrong, the system is promptly and confidently wrong, which is one reason the escalation ladder requires a human response before involving anyone else.
+
+\subsection{Instrumenting the Dog}
+Collar- and harness-mounted inertial sensors are an established tool for canine activity recognition~\cite{ladha2013dogslife,kumpulainen2018collar,chambers2021deep,hussain2022lstm}, within the wider field of animal--computer interaction~\cite{mancini2011aci}. Placement matters: in 45 dogs a harness sensor reached up to 91\% accuracy against at best 75\% from the collar~\cite{kumpulainen2021harness}. Working-dog wearables have also been used as interfaces---dog-activated controls~\cite{jackson2013fido}, two-way dog--handler communication~\cite{byrne2014twoway}, and on-device CNNs that alert search-and-rescue handlers~\cite{kasnesis2022sar}. Closest to this work, Raju et al.\ distinguished trained signalling from routine behaviour in collar accelerometry from 11 assistance dogs over 107 days~\cite{raju2023signalling}, and Brady et al.\ added a gyroscope, a standardised spin alert and cross-dog (leave-one-dog-out) evaluation~\cite{brady2025collar}, recording with a Shimmer3 unit~\cite{burns2010shimmer}. Both are offline analyses; neither implements an alerting path.
+
+\subsection{Instrumenting the Person}
+Wearable seizure detection is far more mature. A meta-analysis of non-invasive devices reported pooled sensitivity of 0.91 and 2.1 false alarms per 24\,h across 23 studies~\cite{naganur2022meta}; devices with phase-3/4 evidence for major motor seizures reach 79.4--96\% sensitivity at 0.20--1.92 false alarms per 24\,h~\cite{meritamlarsen2023nonEEG}, and an updated review reports similar figures for tonic--clonic seizures and markedly worse ones for focal seizures~\cite{mohamed2026updated}. The field has a clinical practice guideline~\cite{beniczky2021ilae}, phased validation standards~\cite{beniczky2018standards}, standardised event-based scoring~\cite{dan2025szcore,shah2021metrics}, and commercial devices validated in and out of hospital~\cite{regalia2019empatica,arends2018nightwatch,jeppesen2025ecg}. Two points matter here. First, these devices detect seizures largely \emph{after} onset; a dog's alert, if genuine, is pre-ictal. Second, their false-alarm rates are the honest yardstick for ours, and notably a phase-3 ECG system cancelled all of its false alarms with a smartphone response test~\cite{jeppesen2025ecg}---the same idea as our owner-acknowledgement stage.
+
+\subsection{After Detection: Escalation and Alarm Fatigue}
+Escalating an unacknowledged alarm to caregivers and monitoring services is standard practice in fall detection and personal emergency response~\cite{igual2013fall,mubashir2013fall,karar2022fall}, and its absence has a measurable cost: among people over 90, 80\% of fallers could not get up unaided, 30\% lay on the floor for an hour or more, and call alarms, though widely available, were mostly not used to summon help~\cite{fleming2008floor}. Families of people with cognitive change have been reported to prefer escalation to a ``circle of friends'' over automatic emergency dispatch~\cite{ferguson2025ambient}, which motivates our caregiver tier. The opposing force is alarm fatigue: high false-alarm rates desensitise responders~\cite{cvach2012alarm,sendelbach2013alarm,ahrq2020alarm}. We are not aware of work that couples escalation to an animal-mediated detector, nor of work that derives a detector's acceptable false-alarm rate from the escalation design.
+
+\subsection{Verification of Safety Protocols and Embedded Inference}
+Timed-automata and model-checking approaches have been applied to medical device software such as pacemakers~\cite{jee2010pacemaker,jiang2012pacemaker}, and TLA$^+$ with the TLC model checker~\cite{lamport2002specifying,yu1999tlc} is used industrially to find protocol bugs that testing misses~\cite{newcombe2015aws}. Property-based testing~\cite{claessen2000quickcheck,maciver2019hypothesis} is a lightweight way to check that an implementation respects the same invariants. On the embedded side, random forests are well suited to microcontrollers~\cite{elsts2021mcu,tabanelli2022rf,daghero2021adaptive,sancheziborra2020tinyml}, with existing code generators~\cite{nordby2019emlearn,micromlgen} and benchmarks~\cite{banbury2021mlperftiny}; cross-device heterogeneity~\cite{stisen2015smart} and augmentation for sensor placement~\cite{um2017augmentation} are recognised issues in inertial activity recognition.
+
+\subsection{Positioning}
+Each component above exists somewhere. What we contribute is their composition for this application and, more importantly, an evaluation of the composite: how the detector's measured errors propagate through a verified escalation protocol into outcomes for the owner and burden on the caregiver. Table~\ref{tab:capability} summarises the comparison.
+
+\begin{table}[H]
+\caption{Capabilities of related systems. \checkmark: present; ---: absent; $\sim$: partial.\label{tab:capability}}
+\begin{adjustwidth}{-\extralength}{0cm}
+\begin{tabularx}{\fulllength}{lCCCCC}
+\toprule
+ & \textbf{Raju 2023}~\cite{raju2023signalling} & \textbf{Brady 2025}~\cite{brady2025collar} & \textbf{Seizure wearables}~\cite{beniczky2021ilae} & \textbf{Fall/PERS}~\cite{igual2013fall} & \textbf{This work}\\
+\midrule
+Detects a trained canine alert & \checkmark & \checkmark & --- & --- & \checkmark\\
+Cross-subject evaluation & --- & \checkmark & \checkmark & n/a & $\sim$\textsuperscript{1}\\
+Real-time on-device inference & --- & --- & \checkmark & \checkmark & \checkmark\textsuperscript{2}\\
+Continuous-stream false-alarm rate & --- & --- & \checkmark & \checkmark & \checkmark\\
+Escalation on non-response & --- & --- & $\sim$ & \checkmark & \checkmark\\
+Formally verified escalation & --- & --- & --- & --- & \checkmark\\
+Clinically validated & --- & --- & \checkmark & \checkmark & ---\\
+\bottomrule
+\end{tabularx}
+\end{adjustwidth}
+\noindent{\footnotesize{\textsuperscript{1} Leave-one-recording-group-out; the public data carry no dog identities (Section~\ref{sec:data}). \textsuperscript{2} Verified on the host against golden vectors; not yet run on a collar.}}
+\end{table}
