@@ -57,7 +57,7 @@ def style():
 
 def save(fig, name):
     OUT.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT / f"{name}.pdf")
+    fig.savefig(OUT / f"{name}.pdf", metadata={"CreationDate": None})
     plt.close(fig)
     print(f"  {name}.pdf")
 

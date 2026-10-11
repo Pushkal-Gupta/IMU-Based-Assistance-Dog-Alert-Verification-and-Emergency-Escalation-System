@@ -11,17 +11,17 @@ AtMostOneEmergencyPage,invariant,SpecReliable,Direct,True,True,True,1904,2057,,R
 NoEmergencyAfterOwnerResponse,invariant,SpecReliable,Direct,True,True,True,1904,2057,,Reliable phone and network: no emergency page after the owner responded
 NoSilentLoss,invariant,SpecReliable,Direct,True,True,True,1904,2057,,Reliable phone and network: no alert is silently lost
 NoPrematureEmergency,invariant,SpecReliable,Direct,True,True,True,1904,2057,,Reliable phone and network: the caregiver tier is never skipped
-NeverEmergency,invariant,Spec,Direct,True,False,False,12470,27400,15,Witness: the relay can reach ESCALATED_EMERGENCY
-NeverAckCaregiver,invariant,Spec,Direct,True,False,False,1825,3582,7,Witness: a caregiver can acknowledge
-NeverDismissed,invariant,Spec,Direct,True,False,False,352,640,2,Witness: the owner can dismiss
-NeverWatchdogPage,invariant,Spec,Direct,True,False,False,2996,5955,9,Witness: the watchdog can fire
-NoPrematureEmergency,invariant,Spec,Direct,True,False,False,2595,5130,9,Under partitions: the caregiver tier is never skipped
-AtMostOneEmergencyPage,invariant,Spec,Direct,True,False,False,27713,61137,19,Under partitions: the emergency contact is paged at most once
-NoEmergencyAfterOwnerResponse,invariant,Spec,Direct,True,False,False,3875,7817,10,Under partitions / relay death: no emergency page after the owner responded
-NoSilentLoss,invariant,Spec,Direct,True,False,False,49779,109482,22,Under relay death: no alert is silently lost
+NeverEmergency,invariant,Spec,Direct,True,False,False,10585,23106,15,Witness: the relay can reach ESCALATED_EMERGENCY
+NeverAckCaregiver,invariant,Spec,Direct,True,False,False,1700,3204,7,Witness: a caregiver can acknowledge
+NeverDismissed,invariant,Spec,Direct,True,False,False,342,590,2,Witness: the owner can dismiss
+NeverWatchdogPage,invariant,Spec,Direct,True,False,False,3337,6626,9,Witness: the watchdog can fire
+NoPrematureEmergency,invariant,Spec,Direct,True,False,False,4339,8687,9,Under partitions: the caregiver tier is never skipped
+AtMostOneEmergencyPage,invariant,Spec,Direct,True,False,False,24748,54779,19,Under partitions: the emergency contact is paged at most once
+NoEmergencyAfterOwnerResponse,invariant,Spec,Direct,True,False,False,3700,7429,10,Under partitions / relay death: no emergency page after the owner responded
+NoSilentLoss,invariant,Spec,Direct,True,False,False,47745,104896,22,Under relay death: no alert is silently lost
 NoPrematureEmergency,invariant,Spec,Ladder,True,True,True,128620,326490,,"Ladder watchdog: the caregiver tier is never skipped, even under partitions"
 AtMostOncePerChannel,invariant,Spec,Ladder,True,True,True,128620,326490,,Ladder watchdog: no channel paged twice by either party
 BoundedResponseWithWatchdog,invariant,Spec,Ladder,True,True,True,128620,326490,,Ladder watchdog: bounded response is preserved
-NeverWatchdogPage,invariant,Spec,Ladder,True,False,False,18623,40900,17,Ladder watchdog witness: the watchdog can still reach the emergency contact
-AtMostOneEmergencyPage,invariant,Spec,Ladder,True,False,False,22288,49174,19,Ladder watchdog: duplicate emergency pages remain possible (needs idempotent paging)
-NoEmergencyAfterOwnerResponse,invariant,Spec,Ladder,True,False,False,18162,39794,19,Ladder watchdog: a lost acknowledgement can still cause an emergency page
+NeverWatchdogPage,invariant,Spec,Ladder,True,False,False,18468,40499,18,Ladder watchdog witness: the watchdog can still reach the emergency contact
+AtMostOneEmergencyPage,invariant,Spec,Ladder,True,False,False,21746,48018,19,Ladder watchdog: duplicate emergency pages remain possible (needs idempotent paging)
+NoEmergencyAfterOwnerResponse,invariant,Spec,Ladder,True,False,False,16634,36319,19,Ladder watchdog: a lost acknowledgement can still cause an emergency page
