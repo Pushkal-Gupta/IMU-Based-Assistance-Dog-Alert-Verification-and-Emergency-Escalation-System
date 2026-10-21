@@ -65,6 +65,49 @@ anyone else is contacted, and it is the main finding of the research.
 
 ![Verification gate trade-off](docs/figures/fig5_operating_curve.png)
 
+## Prototype
+
+### Collar hardware
+
+The collar electronics on a breadboard: an ESP32 DevKit, an MPU6050 IMU
+breakout, an active buzzer and a status LED, powered over USB. Wiring and the
+bill of materials are in [docs/05-hardware.md](docs/05-hardware.md).
+
+| Unpowered | Powered, armed (green LED) |
+|---|---|
+| ![Breadboard prototype, unpowered](docs/images/hardware/breadboard.jpg) | ![Breadboard prototype, powered](docs/images/hardware/breadboard-powered.jpg) |
+
+### Escalation console
+
+One alert from the collar `stuart` as it moves through the escalation
+ladder, seen from each role's workspace.
+
+**1. Alert history.** Totals, the escalation rate, the median owner response
+time and the audit log of every incident.
+
+![Alert history](docs/images/dashboard/01-history.jpg)
+
+**2. Owner.** The owner is asked first, and can confirm they are fine,
+dismiss a false alarm or request help.
+
+![Owner response](docs/images/dashboard/02-owner-alert.jpg)
+
+**3. Caregiver.** If the owner does not respond within T1, the caregiver is
+paged and asked to acknowledge.
+
+![Caregiver console](docs/images/dashboard/03-caregiver-alert.jpg)
+
+**4. Emergency contact.** If neither responds within T2, the alert escalates
+to the emergency contact. In this prototype, acknowledging records receipt
+only; it does not contact emergency services.
+
+![Emergency contact](docs/images/dashboard/04-emergency-alert.jpg)
+
+**5. Audit trail.** Expanding an incident shows its state transitions and
+notification attempts.
+
+![Incident detail](docs/images/dashboard/05-incident-detail.jpg)
+
 ## Try it in three commands
 
 ```bash
