@@ -31,6 +31,7 @@
  */
 
 #include <Arduino.h>
+#include <math.h>
 #include <BLE2902.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
@@ -38,6 +39,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include <Wire.h>
+#include <string.h>
 
 extern "C" {
 #include "src/ca_features.h"
@@ -51,7 +53,12 @@ extern "C" {
 /* configuration                                                            */
 /* ------------------------------------------------------------------------ */
 
-#define FIRMWARE_VERSION "1.0.0"
+#define FIRMWARE_VERSION "1.0.0-bench"
+
+/* Bench integration only: allows a manual test alert over BLE. Set to 0 before any non-demo use. */
+#define ENABLE_SERIAL_TEST_ALERTS 1
+/* MicroSD is deferred. Do not initialise SPI while GPIO18/19 are used by the red LED and buzzer. */
+#define ENABLE_SD_LOGGING 0
 
 /* Identifies this collar, and therefore this dog, in every alert. */
 #define DOG_ID "stuart"
@@ -59,9 +66,9 @@ extern "C" {
 /* --- pins (see docs/05-hardware.md) --- */
 static const int PIN_SDA = 21;
 static const int PIN_SCL = 22;
-static const int PIN_LED_STATUS = 27; /* green: armed */
-static const int PIN_LED_ALERT = 26;  /* red: alert raised */
-static const int PIN_BUZZER = 14;
+static const int PIN_LED_STATUS = 4;  /* green: armed (user bench wiring) */
+static const int PIN_LED_ALERT = 18;  /* red: alert raised (user bench wiring) */
+static const int PIN_BUZZER = 19;     /* buzzer (user bench wiring) */
 static const int PIN_SD_CS = 5;
 static const int PIN_BATTERY = 34; /* ADC1, input-only */
 
@@ -128,6 +135,21 @@ static char g_alert_payload[192];
 static portMUX_TYPE g_timer_mux = portMUX_INITIALIZER_UNLOCKED;
 static volatile bool g_sample_due = false;
 static hw_timer_t *g_sample_timer = nullptr;
+
+/* Explicit bench-only threshold mode. The 250 deg/s starting value is a
+ * provisional demo setting, NOT a validated detector threshold. Calibrate it
+ * from logged normal/target movement before making any performance claims. */
+static volatile float g_latest_gyro_mag_dps = 0.0f;
+static volatile uint32_t g_sample_counter = 0u;
+static bool g_threshold_test_mode = false;
+static bool g_next_alert_is_threshold_test = false;
+static float g_test_gyro_threshold_dps = 250.0f;
+static uint8_t g_test_consecutive_samples = 0u;
+static uint32_t g_last_test_trigger_ms = 0u;
+static uint32_t g_last_seen_sample_counter = 0u;
+static uint32_t g_last_test_telemetry_ms = 0u;
+static const uint8_t TEST_REQUIRED_CONSECUTIVE_SAMPLES = 3u;
+static const uint32_t TEST_COOLDOWN_MS = 6000u;
 
 static bool g_sd_available = false;
 
@@ -233,8 +255,8 @@ class ConnectionCallbacks : public BLEServerCallbacks {
 class AlertAckCallbacks : public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *characteristic) override
     {
-        std::string value = characteristic->getValue();
-        if (value.rfind("ACK:", 0) == 0) {
+        String value = characteristic->getValue();
+        if (value.startsWith("ACK:")) {
             Serial.printf("relay acknowledged: %s\n", value.c_str());
             g_alert_outstanding = false;
             digitalWrite(PIN_LED_ALERT, LOW);
@@ -322,20 +344,93 @@ static void raise_alert(const ca_alert &alert)
              "\"firmware_version\":\"%s\"}",
              DOG_ID, (unsigned long)g_alert_sequence,
              (unsigned long)alert.timestamp_ms, (double)alert.confidence,
-             alert.votes, alert.window_count, FIRMWARE_VERSION);
+             alert.votes, alert.window_count,
+             g_next_alert_is_threshold_test ? "1.0.0-bench-threshold-test" : FIRMWARE_VERSION);
+    g_next_alert_is_threshold_test = false;
 
     g_alert_outstanding = true;
     g_alert_send_count = 0u;
     g_alert_last_sent_ms = 0u; /* forces an immediate first transmission */
 
     digitalWrite(PIN_LED_ALERT, HIGH);
+    digitalWrite(PIN_LED_STATUS,LOW);
     /* A short local chirp: if a person is nearby, the fastest escalation path is
      * the one that does not involve a phone at all. */
     tone(PIN_BUZZER, 2000, 300);
-
+    delay(300);
+    digitalWrite(PIN_LED_ALERT, LOW);
+    digitalWrite(PIN_LED_STATUS,HIGH);
     Serial.printf("ALERT %s\n", g_alert_payload);
     log_line(g_alert_payload);
 }
+
+#if ENABLE_SERIAL_TEST_ALERTS
+/*
+ * Bench-only end-to-end test. Open Serial Monitor at 115200 baud, ensure the
+ * Python BLE relay is already connected, then send TEST_ALERT. This deliberately
+ * bypasses the classifier and tests only BLE -> relay -> backend -> dashboard.
+ */
+static char g_serial_command[32];
+static size_t g_serial_command_len = 0;
+
+static void service_serial_test_command()
+{
+    while (Serial.available() > 0) {
+        const char ch = (char)Serial.read();
+        if (ch == '\r') {
+            continue;
+        }
+        if (ch == '\n') {
+            g_serial_command[g_serial_command_len] = '\0';
+            if (strcmp(g_serial_command, "TEST_MODE ON") == 0) {
+                g_threshold_test_mode = true;
+                g_test_consecutive_samples = 0u;
+                g_last_seen_sample_counter = g_sample_counter;
+                Serial.printf("THRESHOLD TEST MODE ON; gyro magnitude threshold=%.1f deg/s; %u consecutive samples\n",
+                              g_test_gyro_threshold_dps, TEST_REQUIRED_CONSECUTIVE_SAMPLES);
+                Serial.println("TEST ONLY: threshold trigger bypasses the ML classifier; not a validated detector");
+            } else if (strcmp(g_serial_command, "TEST_MODE OFF") == 0) {
+                g_threshold_test_mode = false;
+                g_test_consecutive_samples = 0u;
+                Serial.println("THRESHOLD TEST MODE OFF; ML classification resumed");
+            } else if (strncmp(g_serial_command, "THRESHOLD ", 10) == 0) {
+                char *end = nullptr;
+                float value = strtof(g_serial_command + 10, &end);
+                if (end != g_serial_command + 10 && *end == '\0' && value >= 20.0f && value <= 2000.0f) {
+                    g_test_gyro_threshold_dps = value;
+                    g_test_consecutive_samples = 0u;
+                    Serial.printf("Test gyro magnitude threshold set to %.1f deg/s\n", g_test_gyro_threshold_dps);
+                } else {
+                    Serial.println("Usage: THRESHOLD <20..2000> (deg/s)");
+                }
+            } else if (strcmp(g_serial_command, "TEST_STATUS") == 0) {
+                Serial.printf("test_mode=%s threshold=%.1f deg/s latest_gyro_magnitude=%.1f deg/s\n",
+                              g_threshold_test_mode ? "ON" : "OFF", g_test_gyro_threshold_dps,
+                              (double)g_latest_gyro_mag_dps);
+            } else if (strcmp(g_serial_command, "TEST_ALERT") == 0) {
+                if (!g_alert_outstanding) {
+                    ca_alert test = {};
+                    test.timestamp_ms = millis();
+                    test.window_index = -1;
+                    test.confidence = 0.95f;
+                    test.votes = CA_VERIFY_K;
+                    test.window_count = CA_VERIFY_N;
+                    Serial.println("BENCH TEST: injecting a synthetic alert (classifier bypassed)");
+                    raise_alert(test);
+                } else {
+                    Serial.println("TEST_ALERT ignored: an alert is already outstanding");
+                }
+            } else if (g_serial_command_len > 0) {
+                Serial.printf("Unknown serial command: %s\n", g_serial_command);
+                Serial.println("Commands: TEST_ALERT | TEST_MODE ON | TEST_MODE OFF | THRESHOLD <deg/s> | TEST_STATUS");
+            }
+            g_serial_command_len = 0;
+        } else if (g_serial_command_len < sizeof(g_serial_command) - 1) {
+            g_serial_command[g_serial_command_len++] = ch;
+        }
+    }
+}
+#endif
 
 static void service_outstanding_alert()
 {
@@ -398,6 +493,11 @@ static void sampling_task(void *parameter)
 
         if (mpu_read_sample(sample)) {
             ca_ring_push(&g_ring, sample);
+            const float gx = (float)sample[3];
+            const float gy = (float)sample[4];
+            const float gz = (float)sample[5];
+            g_latest_gyro_mag_dps = sqrtf(gx * gx + gy * gy + gz * gz);
+            ++g_sample_counter;
         } else if (++missed % 50u == 1u) {
             /* An I2C read can fail transiently; a *sustained* failure means the
              * sensor has come loose, which is worth saying out loud rather than
@@ -443,17 +543,22 @@ void setup()
         }
     }
 
+#if ENABLE_SD_LOGGING
     g_sd_available = SD.begin(PIN_SD_CS);
     Serial.println(g_sd_available ? "SD card ready" : "SD card absent; not logging");
+#else
+    g_sd_available = false;
+    Serial.println("SD logging disabled for this bench pin mapping (GPIO18/19 are used by LED/buzzer)");
+#endif
 
     ble_begin();
 
     /* Core 0 does nothing but sample, so the 133-point DFTs on core 1 cannot
      * stretch the sampling interval and distort the spectral features. */
-    g_sample_timer = timerBegin(0, 80, true); /* 80 MHz / 80 = 1 MHz -> 1 us ticks */
-    timerAttachInterrupt(g_sample_timer, &on_sample_timer, true);
-    timerAlarmWrite(g_sample_timer, SAMPLE_PERIOD_US, true);
-    timerAlarmEnable(g_sample_timer);
+    /* Arduino-ESP32 core 3.x timer API: configure a 1 MHz timer (1 us/tick). */
+    g_sample_timer = timerBegin(1000000);
+    timerAttachInterrupt(g_sample_timer, &on_sample_timer);
+    timerAlarm(g_sample_timer, SAMPLE_PERIOD_US, true, 0);
 
     xTaskCreatePinnedToCore(sampling_task, "imu", 4096, nullptr,
                             configMAX_PRIORITIES - 1, nullptr, 0);
@@ -464,6 +569,9 @@ void setup()
 
 void loop()
 {
+#if ENABLE_SERIAL_TEST_ALERTS
+    service_serial_test_command();
+#endif
     static uint32_t last_classification_ms = 0u;
     static uint32_t last_status_ms = 0u;
 
@@ -474,7 +582,7 @@ void loop()
         (uint32_t)(1000.0f * CA_STRIDE_SAMPLES / CA_SAMPLE_RATE_HZ);
 
     uint32_t now = millis();
-    if ((now - last_classification_ms) >= stride_ms && ca_ring_ready(&g_ring)) {
+    if (!g_threshold_test_mode && (now - last_classification_ms) >= stride_ms && ca_ring_ready(&g_ring)) {
         last_classification_ms = now;
 
         if (ca_ring_copy_window(&g_ring, g_window)) {
@@ -491,6 +599,44 @@ void loop()
             }
         }
         /* A torn window is simply skipped -- the next stride brings another. */
+    }
+
+    /* Threshold test mode consumes real IMU samples but deliberately bypasses
+     * the ML classifier. Telemetry helps tune the provisional threshold. */
+    const uint32_t samples_now = g_sample_counter;
+    if (g_threshold_test_mode && samples_now != g_last_seen_sample_counter) {
+        g_last_seen_sample_counter = samples_now;
+        const float gyro_mag = g_latest_gyro_mag_dps;
+        if (gyro_mag >= g_test_gyro_threshold_dps) {
+            if (g_test_consecutive_samples < 255u) ++g_test_consecutive_samples;
+        } else {
+            g_test_consecutive_samples = 0u;
+        }
+
+        if ((now - g_last_test_telemetry_ms) >= 500u) {
+            g_last_test_telemetry_ms = now;
+            Serial.printf("TEST IMU: gyro_mag=%.1f deg/s threshold=%.1f deg/s consecutive=%u/%u\n",
+                          (double)gyro_mag, (double)g_test_gyro_threshold_dps,
+                          g_test_consecutive_samples, TEST_REQUIRED_CONSECUTIVE_SAMPLES);
+        }
+
+        if (g_test_consecutive_samples >= TEST_REQUIRED_CONSECUTIVE_SAMPLES &&
+            !g_alert_outstanding && (now - g_last_test_trigger_ms) >= TEST_COOLDOWN_MS) {
+            ca_alert test = {};
+            test.timestamp_ms = now;
+            test.window_index = -1;
+            /* Relay currently enforces a minimum confidence. This value is a
+             * compatibility placeholder, NOT an ML probability. Firmware version
+             * marks this as threshold-test mode in the alert payload. */
+            test.confidence = 0.95f;
+            test.votes = TEST_REQUIRED_CONSECUTIVE_SAMPLES;
+            test.window_count = TEST_REQUIRED_CONSECUTIVE_SAMPLES;
+            g_next_alert_is_threshold_test = true;
+            g_last_test_trigger_ms = now;
+            g_test_consecutive_samples = 0u;
+            Serial.println("THRESHOLD TEST TRIGGER: real IMU threshold crossed; ML bypassed");
+            raise_alert(test);
+        }
     }
 
     service_outstanding_alert();

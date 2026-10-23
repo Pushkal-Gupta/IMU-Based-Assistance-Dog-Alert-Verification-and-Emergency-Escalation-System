@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080f1d">
+  <title>Caregiver console · Assistance Dog Alert System</title>
+  <style>
+:root {
+  color-scheme: dark;
+  font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #080f1d;
+  color: #edf3ff;
+  --accent: #5ee0b0;
+  --accent-soft: rgba(94, 224, 176, .12);
+  --accent-border: rgba(94, 224, 176, .3);
+  --accent-ink: #05261c;
+  --panel: rgba(15, 27, 47, .92);
+  --panel-raised: #13223a;
+  --border: #263958;
+  --muted: #a4b4d0;
+  --muted-dim: #7789a8;
+  --danger: #ff7f89;
+  --warning: #ffca78;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; padding: 42px 18px 30px; background:
+  radial-gradient(ellipse at 50% -15%, rgba(55, 104, 178, .28), transparent 56%),
+  radial-gradient(ellipse at 0% 50%, rgba(42, 80, 126, .10), transparent 40%), #080f1d; }
+body[data-role="caregiver"] { --accent: #91b4ff; --accent-soft: rgba(91, 139, 255, .13); --accent-border: rgba(126, 164, 255, .34); --accent-ink: #101d3d; }
+body[data-role="emergency"] { --accent: #ff939a; --accent-soft: rgba(255, 117, 130, .12); --accent-border: rgba(255, 147, 154, .34); --accent-ink: #3a1019; }
+button { font: inherit; }
+.shell { width: min(100%, 880px); margin: 0 auto; }
+.hero { text-align: center; margin: 0 auto 28px; }
+.brand-lockup { display: inline-flex; align-items: center; justify-content: center; gap: 10px; color: #adbfde; font-size: 11px; font-weight: 850; letter-spacing: .19em; text-transform: uppercase; }
+.brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--accent-border); border-radius: 13px; color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 28px rgba(93, 148, 241, .09); }
+.brand-mark svg { width: 22px; height: 22px; }
+.eyebrow { margin-top: 26px; color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+h1 { margin: 9px 0 8px; font-size: clamp(32px, 4.4vw, 45px); line-height: 1.12; letter-spacing: -.045em; font-weight: 820; }
+.subtitle { max-width: 560px; margin: 0 auto; color: var(--muted); font-size: 15px; line-height: 1.65; }
+.connection { display: inline-flex; align-items: center; gap: 9px; margin-top: 20px; padding: 9px 13px; border: 1px solid var(--border); border-radius: 999px; background: rgba(14, 26, 45, .8); color: var(--muted); font-size: 12px; font-weight: 700; }
+.connection-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: #ffca78; box-shadow: 0 0 0 4px rgba(255, 202, 120, .09); }
+.connection.connected { color: #8be7bc; border-color: rgba(94, 224, 176, .25); }
+.connection.connected .connection-dot { background: #5ee0b0; box-shadow: 0 0 0 4px rgba(94, 224, 176, .1); }
+.connection.disconnected { color: #ff9aa3; border-color: rgba(255, 127, 137, .28); }
+.connection.disconnected .connection-dot { background: #ff7f89; box-shadow: 0 0 0 4px rgba(255, 127, 137, .1); }
+.card { margin-top: 17px; padding: clamp(20px, 4vw, 30px); border: 1px solid rgba(104, 136, 184, .22); border-radius: 24px; background: linear-gradient(145deg, rgba(18, 32, 55, .97), rgba(11, 21, 38, .97)); box-shadow: 0 20px 60px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255,255,255,.025); }
+.card-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.section-kicker { color: var(--accent); font-size: 10px; font-weight: 850; letter-spacing: .18em; text-transform: uppercase; }
+h2 { margin: 6px 0 0; font-size: 21px; letter-spacing: -.025em; }
+.role-badge { flex: 0 0 auto; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--accent-border); background: var(--accent-soft); color: var(--accent); font-size: 10px; font-weight: 850; letter-spacing: .1em; }
+.main-state { min-height: 126px; }
+.waiting { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 126px; padding: 18px; border: 1px dashed #304563; border-radius: 17px; background: rgba(6, 15, 28, .28); color: var(--muted); text-align: left; }
+.waiting-symbol, .empty-symbol, .alert-symbol { display: grid; place-items: center; flex: 0 0 auto; width: 45px; height: 45px; border-radius: 14px; background: var(--accent-soft); border: 1px solid var(--accent-border); color: var(--accent); font-size: 22px; font-weight: 850; }
+.waiting strong { display: block; margin-bottom: 5px; color: #eaf1ff; font-size: 15px; }
+.waiting p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.empty-state { display: flex; min-height: 150px; flex-direction: column; align-items: center; justify-content: center; padding: 18px; text-align: center; }
+.empty-symbol { border-radius: 50%; font-size: 23px; }
+.big { margin: 15px 0 5px; font-size: clamp(23px, 3.4vw, 30px); letter-spacing: -.035em; font-weight: 780; }
+.empty-copy { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.monitoring-note { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; color: var(--muted-dim); font-size: 11px; }
+.monitoring-note span { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.alert-panel { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 16px; padding: 20px; border: 1px solid var(--accent-border); border-radius: 18px; background: linear-gradient(130deg, var(--accent-soft), rgba(6,15,28,.45)); }
+.alert-symbol { width: 52px; height: 52px; border-radius: 16px; font-size: 25px; }
+.alert-state { color: var(--accent); font-size: 11px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+.alert-title { margin: 7px 0 15px; font-size: clamp(18px, 2.5vw, 23px); letter-spacing: -.03em; line-height: 1.3; }
+.details { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.detail { min-width: 0; padding: 12px 13px; border: 1px solid rgba(117, 145, 184, .17); border-radius: 12px; background: rgba(5, 14, 27, .36); }
+.detail-label { margin-bottom: 6px; color: var(--muted-dim); font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.detail-value { overflow-wrap: anywhere; color: #edf3ff; font-size: 13px; font-weight: 750; }
+.detail-value code { color: #dfeaff; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; }
+.notice { display: flex; gap: 9px; align-items: flex-start; margin-top: 13px; padding: 12px 14px; border-radius: 12px; background: rgba(255, 202, 120, .07); color: #cfbb96; font-size: 12px; line-height: 1.55; }
+.notice strong { color: #ffda9a; }
+.btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 11px; margin-top: 22px; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 46px; padding: 12px 18px; border: 1px solid transparent; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 800; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
+.button:hover { transform: translateY(-1px); }
+.button:active { transform: translateY(0); }
+.button:focus-visible { outline: 3px solid rgba(158, 190, 255, .75); outline-offset: 3px; }
+.button:disabled { opacity: .6; cursor: wait; transform: none; }
+.button-primary { color: var(--accent-ink); background: var(--accent); box-shadow: 0 7px 20px var(--accent-soft); }
+.button-primary:hover { filter: brightness(1.06); box-shadow: 0 10px 26px var(--accent-soft); }
+.button-neutral { color: #eaf1ff; border-color: #344766; background: #1a2b46; }
+.button-neutral:hover { background: #203655; }
+.button-danger { color: #fff4f4; border-color: rgba(255,127,137,.35); background: #6c2939; }
+.button-danger:hover { background: #823248; }
+.button-icon { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 6px; font-size: 12px; background: rgba(0,0,0,.08); }
+.feedback { min-height: 19px; margin: 16px 0 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.5; }
+.feedback.success { color: #8be7bc; }
+.feedback.error { color: #ff9aa3; }
+.section-subtitle { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.history-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 11px; }
+.history-empty { padding: 22px; border: 1px dashed #304563; border-radius: 14px; color: var(--muted); text-align: center; font-size: 13px; }
+.item { min-width: 0; padding: 15px; border: 1px solid rgba(104, 136, 184, .18); border-radius: 15px; background: rgba(6, 15, 28, .32); }
+.item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 9px; }
+.item-id { overflow-wrap: anywhere; color: #edf3ff; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; font-weight: 750; }
+.state-badge { display: inline-block; max-width: 52%; padding: 5px 7px; border: 1px solid #354866; border-radius: 7px; background: #172941; color: #c2d1e9; font-size: 10px; line-height: 1.25; text-align: right; }
+.state-badge.active { border-color: var(--accent-border); background: var(--accent-soft); color: var(--accent); }
+.item-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 11px; color: var(--muted); font-size: 11px; }
+.item-meta strong { color: #e8efff; font-weight: 750; }
+.footer { margin: 22px auto 0; max-width: 660px; color: #7183a1; font-size: 11px; line-height: 1.65; text-align: center; }
+code { overflow-wrap: anywhere; }
+[hidden] { display: none !important; }
+@media (max-width: 640px) {
+  body { padding: 27px 13px 24px; }
+  .hero { margin-bottom: 20px; }
+  .eyebrow { margin-top: 20px; }
+  .card { border-radius: 19px; }
+  .card-heading { margin-bottom: 17px; }
+  .alert-panel { grid-template-columns: 1fr; }
+  .alert-symbol { width: 44px; height: 44px; }
+  .details { grid-template-columns: 1fr; }
+  .detail { display: flex; justify-content: space-between; gap: 14px; align-items: center; }
+  .detail-label { margin: 0; }
+  .detail-value { text-align: right; }
+  .history-list { grid-template-columns: 1fr; }
+  .btns { flex-direction: column; }
+  .button { width: 100%; }
+  .waiting { align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body data-role="caregiver">
+  <main class="shell">
+    <header class="hero">
+      <div class="brand-lockup">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 21s7-3.7 7-10V5l-7-3-7 3v6c0 6.3 7 10 7 10Z" />
+            <path d="m8.8 11.8 2.1 2.1 4.5-4.6" />
+          </svg>
+        </span>
+        <span>Assistance Dog Alert System</span>
+      </div>
+      <div class="eyebrow">Local safety console</div>
+      <h1>Caregiver console</h1>
+      <p class="subtitle">Review an escalation when the owner has not responded.</p>
+      <div class="connection" id="connection" role="status" aria-live="polite"><span class="connection-dot"></span> Checking relay…</div>
+    </header>
+
+    <section class="card" aria-labelledby="current-heading">
+      <div class="card-heading">
+        <div>
+          <div class="section-kicker">Live monitor</div>
+          <h2 id="current-heading">Current alert</h2>
+        </div>
+        <span class="role-badge">ROLE · CAREGIVER</span>
+      </div>
+      <div id="main" class="main-state" aria-live="polite">
+        <div class="waiting">
+          <div class="waiting-symbol" aria-hidden="true">···</div>
+          <div><strong>Connecting to the collar relay</strong><p>Waiting for the latest incident status…</p></div>
+        </div>
+      </div>
+      <div class="btns" id="actions" hidden>
+          <button class="button button-primary" type="button" onclick="respond('ack')"><span class="button-icon">✓</span> Acknowledge alert</button>
+      </div>
+      <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="card" aria-labelledby="history-heading">
+      <div class="card-heading">
+        <div>
+          <div class="section-kicker">Event log</div>
+          <h2 id="history-heading">Recent incidents</h2>
+          <p class="section-subtitle">The latest alert events recorded by the local relay.</p>
+        </div>
+      </div>
+      <div id="history" class="history-list"><div class="history-empty">Loading incident history…</div></div>
+    </section>
+    <p class="footer">Review the situation directly when possible. This local prototype is not a validated medical monitoring or emergency-response service.</p>
+  </main>
+  <script>
+const API = 'http://127.0.0.1:8765';
+let current = null;
+const role = 'caregiver';
+const labels = {
+  PENDING_OWNER: 'Awaiting owner response',
+  PENDING_CAREGIVER: 'Awaiting caregiver response',
+  ACKNOWLEDGED_BY_OWNER: 'Owner acknowledged',
+  ACKNOWLEDGED_BY_CAREGIVER: 'Caregiver acknowledged',
+  ESCALATED_EMERGENCY: 'Emergency escalation',
+  DISMISSED_FALSE_POSITIVE: 'Dismissed as false alarm',
+  CANCELLED: 'Cancelled'
+};
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+}
+
+function activeForRole(alert) {
+  if (role === 'owner') return alert.state === 'PENDING_OWNER';
+  if (role === 'caregiver') return alert.state === 'PENDING_CAREGIVER';
+  return alert.state === 'ESCALATED_EMERGENCY';
+}
+
+function render(alerts) {
+  const active = alerts
+    .filter(activeForRole)
+    .sort((a, b) => (b.raised_at_seconds || 0) - (a.raised_at_seconds || 0));
+  current = active[0] || null;
+  const main = document.getElementById('main');
+  const actions = document.getElementById('actions');
+  const feedback = document.getElementById('feedback');
+
+  if (!current) {
+    main.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-symbol" aria-hidden="true">✓</div>
+        <div class="big">No escalation pending</div>
+        <p class="empty-copy">There is no active incident waiting for caregiver acknowledgement.</p>
+        <div class="monitoring-note"><span></span>Waiting for the next verified collar event</div>
+      </div>`;
+    actions.hidden = true;
+  } else {
+    const confidence = Math.round((current.confidence || 0) * 100);
+    main.innerHTML = `
+      <div class="alert-panel">
+        <div class="alert-symbol" aria-hidden="true">!</div>
+        <div class="alert-content">
+          <div class="alert-state">${esc(labels[current.state] || current.state)}</div>
+          <h3 class="alert-title">Possible assistance-dog alert detected</h3>
+          <div class="details">
+            <div class="detail"><div class="detail-label">Incident ID</div><div class="detail-value"><code>${esc(current.alert_id)}</code></div></div>
+            <div class="detail"><div class="detail-label">Collar</div><div class="detail-value">${esc(current.dog_id)}</div></div>
+            <div class="detail"><div class="detail-label">Confidence</div><div class="detail-value">${confidence}%</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="notice"><span aria-hidden="true">ⓘ</span><div><strong>Please verify the situation directly.</strong> This is a model-generated alert, not a confirmed medical emergency.</div></div>`;
+    actions.hidden = false;
+  }
+
+  const history = alerts.slice().reverse().slice(0, 8);
+  document.getElementById('history').innerHTML = history.map(alert => {
+    const activeBadge = activeForRole(alert);
+    return `
+      <article class="item">
+        <div class="item-top">
+          <div class="item-id">${esc(alert.alert_id)}</div>
+          <span class="state-badge ${activeBadge ? 'active' : ''}">${esc(labels[alert.state] || alert.state)}</span>
+        </div>
+        <div class="item-meta">
+          <span>Collar <strong>${esc(alert.dog_id)}</strong></span>
+          <span>Confidence <strong>${Math.round((alert.confidence || 0) * 100)}%</strong></span>
+        </div>
+      </article>`;
+  }).join('') || '<div class="history-empty">No incidents have been recorded yet.</div>';
+}
+
+async function refresh() {
+  const connection = document.getElementById('connection');
+  try {
+    const health = await fetch(API + '/health', { cache: 'no-store' });
+    if (!health.ok) throw new Error('Relay unavailable');
+    connection.className = 'connection connected';
+    connection.innerHTML = '<span class="connection-dot"></span> Relay connected';
+
+    const response = await fetch(API + '/api/relay/alerts', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Could not load alerts');
+    const data = await response.json();
+    render(data.alerts || []);
+  } catch (error) {
+    current = null;
+    connection.className = 'connection disconnected';
+    connection.innerHTML = '<span class="connection-dot"></span> Relay disconnected';
+    document.getElementById('main').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-symbol" aria-hidden="true">!</div>
+        <div class="big">Relay connection unavailable</div>
+        <p class="empty-copy">Start <code>gateway/relay.py</code> and keep it running. This page will retry automatically.</p>
+      </div>`;
+    document.getElementById('actions').hidden = true;
+  }
+}
+
+async function respond(action) {
+  if (!current) return;
+  const feedback = document.getElementById('feedback');
+  feedback.className = 'feedback';
+
+  if (action === 'help') {
+    feedback.textContent = 'Please contact your caregiver or local emergency number directly. This demo button does not place another emergency call.';
+    feedback.className = 'feedback error';
+    return;
+  }
+  if (role === 'emergency') {
+    feedback.textContent = 'Receipt noted in this demo screen only. No emergency service has been contacted; the incident remains escalated.';
+    feedback.className = 'feedback';
+    return;
+  }
+
+  const buttons = document.querySelectorAll('#actions button');
+  buttons.forEach(button => { button.disabled = true; });
+  feedback.textContent = 'Submitting response to the relay…';
+  try {
+    const endpoint = action === 'dismiss' ? '/api/relay/dismiss' : '/api/relay/ack';
+    const by = role === 'caregiver' ? 'CAREGIVER' : 'OWNER';
+    const response = await fetch(API + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ alert_id: current.alert_id, by })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Response failed');
+    feedback.textContent = 'Response submitted successfully.';
+    feedback.className = 'feedback success';
+    setTimeout(refresh, 450);
+  } catch (error) {
+    feedback.textContent = 'Could not submit response: ' + error.message;
+    feedback.className = 'feedback error';
+    buttons.forEach(button => { button.disabled = false; });
+  }
+}
+
+refresh();
+setInterval(refresh, 1500);
+</script>
+</body>
+</html>
