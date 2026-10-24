@@ -70,8 +70,11 @@ anyone else is contacted, and it is the main finding of the research.
 ### Collar hardware
 
 The collar electronics on a breadboard: an ESP32 DevKit, an MPU6050 IMU
-breakout, an active buzzer and a status LED, powered over USB. Wiring and the
-bill of materials are in [docs/05-hardware.md](docs/05-hardware.md).
+breakout, an active buzzer and status LEDs, powered over USB. The planned
+wiring and bill of materials are in [docs/05-hardware.md](docs/05-hardware.md);
+the pin mapping this bench build actually uses, and how to run it end to end
+with the relay and dashboard, are in
+[LOCAL_HARDWARE_SETUP.md](LOCAL_HARDWARE_SETUP.md).
 
 | Unpowered | Powered, armed (green LED) |
 |---|---|
@@ -80,7 +83,10 @@ bill of materials are in [docs/05-hardware.md](docs/05-hardware.md).
 ### Escalation console
 
 One alert from the collar `stuart` as it moves through the escalation
-ladder, seen from each role's workspace.
+ladder, seen from each role's workspace. These views are served by
+`tools/devserver.py` (`dashboard/index.html`, `owner.html`, `caregiver.html`,
+`emergency.html`) and are also available as a React app in
+[`frontend/`](frontend/README.md).
 
 **1. Alert history.** Totals, the escalation rate, the median owner response
 time and the audit log of every incident.
@@ -168,7 +174,8 @@ the case where the phone itself dies. Full rationale in
 | `gateway/` | Relay node (phone) and the end-to-end replay harness |
 | `backend/` | Jakarta EE 10 / MicroProfile caregiver backend |
 | `tools/` | Dev server (stand-in for the Java backend) and demo seeder |
-| `dashboard/` | Caregiver-facing alert history |
+| `dashboard/` | Alert history plus owner, caregiver and emergency-contact views |
+| `frontend/` | React/Vite version of the same console ([README](frontend/README.md)) |
 | `docs/` | Full documentation set — start with `00-index.md` |
 | `paper/` | The research manuscript (MDPI *Sensors*), generated numbers, figures, supplementary files |
 | `formal/` | TLA⁺ specification of the escalation protocol and the TLC runner |

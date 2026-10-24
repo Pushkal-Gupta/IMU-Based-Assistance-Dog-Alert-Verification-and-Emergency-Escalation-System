@@ -249,8 +249,12 @@ class Handler(BaseHTTPRequestHandler):
         path = parsed.path
         query = parse_qs(parsed.query)
 
-        if path in ("/", "/index.html", "/dashboard"):
-            self._serve_dashboard()
+        page_routes = {
+            "/": "index.html", "/index.html": "index.html", "/dashboard": "index.html",
+            "/owner": "owner.html", "/caregiver": "caregiver.html", "/emergency": "emergency.html",
+        }
+        if path in page_routes:
+            self._serve_page(page_routes[path])
             return
         if path == "/health":
             self._json(HTTPStatus.OK, {"status": "UP", "checks": []})
@@ -284,10 +288,10 @@ class Handler(BaseHTTPRequestHandler):
         else:
             self._error(HTTPStatus.NOT_FOUND, f"no such endpoint: {path}")
 
-    def _serve_dashboard(self) -> None:
-        page = DASHBOARD_DIR / "index.html"
+    def _serve_page(self, filename: str) -> None:
+        page = DASHBOARD_DIR / filename
         if not page.exists():
-            self._error(HTTPStatus.NOT_FOUND, "dashboard/index.html is missing")
+            self._error(HTTPStatus.NOT_FOUND, f"dashboard/{filename} is missing")
             return
         body = page.read_bytes()
         self.send_response(HTTPStatus.OK)
